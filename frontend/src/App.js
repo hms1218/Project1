@@ -6,6 +6,9 @@ import PostDetail from "./pages/PostDetail";
 import About from "./pages/About";
 import './App.css';
 import SignUp from "./pages/SignUp";
+import SignIn from "./pages/SignIn";
+import FindId from "./pages/FindId";
+import FindPw from "./pages/FindPw";
 
 function App() {
     return (
@@ -16,7 +19,10 @@ function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/about" element={<About />} />
                     <Route path="/post/:id" element={<PostDetail />} />
+                    <Route path="/signin" element={<SignIn />} />
                     <Route path="/signup" element={<SignUp />} />
+                    <Route path="/find-id" element={<FindId />} />
+                    <Route path="/find-pw" element={<FindPw />} />
                 </Routes>
             </main>
             <Footer />
