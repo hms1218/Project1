@@ -1,10 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './Form.css'
+import { signInApi } from "../api/UserApi";
+import { useAuth } from "../context/AuthContext";
 
 // 로그인페이지
 const SignIn = () => {
     const navigate = useNavigate();
+
+    const { setUserId } = useAuth();
 
     const [id, setId] = useState('');
     const [pw, setPw] = useState('');
@@ -14,7 +18,7 @@ const SignIn = () => {
 
     const [Error, setError] = useState('');
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         if(id === ''){
@@ -23,7 +27,21 @@ const SignIn = () => {
             setError("비밀번호를 입력해주세요.")
         } else{
             setError('')
-            navigate("/")
+        }
+
+        try {
+            const res = await signInApi({
+                userId: id,
+                password: pw,
+            });
+            setUserId(res.userId);
+            const token = res.token;
+            localStorage.setItem("token", token);
+            alert("로그인 성공!");
+            navigate("/");
+        } catch (error) {
+            const message = error.response?.data?.message || "로그인 실패";
+            alert(message);
         }
     }
 

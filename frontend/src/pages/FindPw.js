@@ -1,5 +1,6 @@
-import { use, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { requestPasswordReset } from "../api/UserApi";
 
 //비밀번호 찾기
 const FindPw = () => {
@@ -10,7 +11,7 @@ const FindPw = () => {
     const [error, setError] = useState('');
     const [message, setMessage] = useState('');
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -33,9 +34,15 @@ const FindPw = () => {
             return;
         }
 
-        //백연동 후 실제 비밀번호 찾기 부분
-        setError('');
-        setMessage("비밀번호 재설정 링크가 이메일로 발송되었습니다. 이메일을 확인해주세요.")
+        try {
+            setError('');
+            const data = await requestPasswordReset(email);
+            setMessage(data.message || "비밀번호 재설정 링크가 이메일로 발송되었습니다. 이메일을 확인해주세요.");
+        } catch (error) {
+            const errMsg = error.response?.data?.message || "비밀번호 재설정 요청 중 오류가 발생했습니다.";
+            setError(errMsg);
+            setMessage('');
+        }
     }
 
     return(

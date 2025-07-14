@@ -9,24 +9,27 @@ import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import FindId from "./pages/FindId";
 import FindPw from "./pages/FindPw";
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
     return (
-        <Router>
-            <Header />
-            <main className="main-container">
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/about" element={<About />} />
-                    <Route path="/post/:id" element={<PostDetail />} />
-                    <Route path="/signin" element={<SignIn />} />
-                    <Route path="/signup" element={<SignUp />} />
-                    <Route path="/find-id" element={<FindId />} />
-                    <Route path="/find-pw" element={<FindPw />} />
-                </Routes>
-            </main>
-            <Footer />
-        </Router>
+        <AuthProvider>
+            <Router>
+                <Header />
+                <main className="main-container">
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/about" element={<About />} />
+                        <Route path="/post/:id" element={<PostDetail />} />
+                        <Route path="/signin" element={<SignIn />} />
+                        <Route path="/signup" element={<SignUp />} />
+                        <Route path="/find-id" element={<FindId />} />
+                        <Route path="/find-pw" element={<FindPw />} />
+                    </Routes>
+                </main>
+                <Footer />
+            </Router>
+        </AuthProvider>
     );
 }
 

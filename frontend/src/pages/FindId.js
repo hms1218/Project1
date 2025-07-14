@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Form.css"
+import { findUserIdByEmail } from "../api/UserApi";
 
 //아이디 찾기
 const FindId = () => {
@@ -10,7 +11,7 @@ const FindId = () => {
     const [error, setError] = useState('');
     const [message, setMessage] = useState('');
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -26,9 +27,16 @@ const FindId = () => {
             return;
         }
 
-        //백연동 후 실제 아이디 찾기 부분
-        setError('');
-        setMessage('가입된 아이디는 이메일로 발송되었거나, 관리자에게 문의해주세요.');
+        try {
+            setError('');
+            const data = await findUserIdByEmail(email);
+            setMessage(`가입된 아이디는 ${data.userId}입니다.`);
+        } catch (error) {
+            console.log("error:", error)
+            const message = error.response?.data?.message || "등록된 아이디가 없습니다.";
+            setError(message);
+            setMessage('');
+        }
     }
 
     return(
@@ -51,6 +59,10 @@ const FindId = () => {
                     아이디를 찾으셨나요?{' '}
                     <span onClick={() => navigate("/signin")}>로그인으로 이동</span>
                 </p>
+                {/* <p>
+                    비밀번호를 잊으셨나요?{' '}
+                    <span onClick={() => navigate("/find-pw")}>비밀번호 찾기로 이동</span>
+                </p> */}
             </form>
         </div>
     )
