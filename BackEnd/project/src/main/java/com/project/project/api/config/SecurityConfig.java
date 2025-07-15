@@ -29,7 +29,9 @@ public class SecurityConfig {
                 		"/users/signin",
                 		"/users/check-id",
                 		"/users/find-id",
-                		"/users/find-pw"
+                		"/users/find-pw",
+                		"/users/validate-reset-token",
+                		"/users/reset-password"
                 		).permitAll() // 회원가입, 로그인은 인증없이 허용
                 .anyRequest().authenticated()  // 그 외 요청은 인증 필요
             .and()

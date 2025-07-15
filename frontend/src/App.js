@@ -10,6 +10,7 @@ import SignIn from "./pages/SignIn";
 import FindId from "./pages/FindId";
 import FindPw from "./pages/FindPw";
 import { AuthProvider } from "./context/AuthContext";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
     return (
@@ -25,6 +26,7 @@ function App() {
                         <Route path="/signup" element={<SignUp />} />
                         <Route path="/find-id" element={<FindId />} />
                         <Route path="/find-pw" element={<FindPw />} />
+                        <Route path="/reset-password" element={<ResetPassword />} />
                     </Routes>
                 </main>
                 <Footer />

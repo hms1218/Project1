@@ -54,7 +54,7 @@ export const requestPasswordReset = async (email) => {
     return res.data;
 };
 
-//비밀번호 재설정
+//비밀번호 토큰 검증
 export const validateResetToken = async (token) => {
     const res = await axios.get(`${API_BASE_URL}/users/validate-reset-token`, {
         params: { token }
@@ -62,6 +62,7 @@ export const validateResetToken = async (token) => {
     return res.data;
 };
 
+//비밀번호 재설정
 export const resetPassword = async (token, newPassword) => {
     const res = await axios.post(`${API_BASE_URL}/users/reset-password`, null, {
         params: { token, newPassword }
