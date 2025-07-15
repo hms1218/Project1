@@ -45,7 +45,7 @@ label {
     box-shadow: 0 0 5px rgba(0,123,255,0.5);
 }
 
-button[type="submit"] {
+.form-button {
     width: 100%;
     background-color: #007BFF;
     color: white;
@@ -58,11 +58,11 @@ button[type="submit"] {
     transition: background-color 0.3s ease;
 }
 
-button[type="submit"]:hover {
+.form-button:hover {
     background-color: #0056b3;
 }
 
-p {
+.form {
     margin-top: 15px;
     font-size: 14px;
     color: #333;
@@ -77,4 +77,35 @@ p span {
 
 p span:hover {
     text-decoration: underline;
+}
+
+/* 모바일 대응 */
+@media (max-width: 768px) {
+    .container {
+        max-width: 50%;
+        margin: 20px auto;
+        padding: 20px 15px;
+    }
+
+    .container h2 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+
+    .form_group input[type="text"],
+    .form_group input[type="password"],
+    .form_group input[type="email"] {
+        width: 93%;
+        font-size: 14px;
+        padding: 8px 10px;
+    }
+
+    .form-button {
+        font-size: 16px;
+        padding: 10px;
+    }
+
+    .form {
+        font-size: 13px;
+    }
 }

@@ -2,7 +2,7 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import './Form.css'
-import { signUpApi, checkIdDuplicate } from "../api/UserApi";
+import { signUpApi, checkIdDuplicate } from "../../api/UserApi";
 
 // 회원가입 페이지
 const SignUp = () => {
@@ -172,7 +172,7 @@ const SignUp = () => {
                     { emailError && <p style={{ color: isEmailValid ? "green" : "red", fontSize: "14px", textAlign: "left" }}>{emailError}</p> }
                 </div>
                 <div>
-                    <button type="submit">가입</button>
+                    <button className="form-button" type="submit">가입</button>
                 </div>
             </form>
         </div>

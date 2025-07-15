@@ -1,0 +1,122 @@
+.detail-container {
+    max-width: 1050px;
+    margin: 40px auto;
+    padding: 20px;
+    font-family: sans-serif;
+}
+
+.detail-meta {
+    color: #555;
+    font-size: 14px;
+    text-align: right;
+}
+
+.detail-content {
+    margin: 20px 0;
+    font-size: 16px;
+    height: 30vh;
+}
+
+.detail-button {
+    text-align: right;
+}
+
+.detail-button button {
+    padding: 8px 16px;
+    background-color: #fff;
+    margin: 3px;
+    color: #000;
+    border: 1px solid #000;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.detail-button button:hover {
+    background-color: #ddd;
+}
+
+.detail-button button.liked-button {
+    background-color: #007bff;
+    color: white;
+}
+
+.detail-button button.liked-button:hover {
+    background-color: #0056b3;
+}
+
+.comment-list {
+    list-style: none;
+    border-top: 1px solid #ddd;
+    padding: 0;
+    margin: 16px 0;
+}
+
+.comment-list li {
+    margin-top: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+    font-size: 15px;
+}
+
+.comment-form {
+    display: flex;
+    gap: 8px;
+}
+
+.comment-form input {
+    flex: 1;
+    padding: 8px;
+    font-size: 14px;
+}
+
+.comment-form button {
+    padding: 8px 16px;
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #000;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.comment-form button:hover {
+    background-color: #ddd;
+}
+
+/* 모바일 대응 */
+@media (max-width: 768px) {
+    .detail-container {
+        max-width: 100%;
+        margin: 20px 8px;
+        padding: 10px;
+    }
+
+    .detail-meta {
+        font-size: 12px;
+        text-align: center;
+    }
+
+    .detail-content {
+        font-size: 14px;
+        height: auto;
+    }
+
+    .detail-button button {
+        padding: 6px 10px;
+        font-size: 14px;
+        margin: 2px 3px;
+    }
+
+    .comment-form input {
+        font-size: 14px;
+    }
+
+    .comment-form button {
+        padding: 6px 12px;
+        font-size: 14px;
+    }
+
+    .comment-list li {
+        font-size: 13px;
+        padding: 6px 0;
+    }
+}

@@ -1,0 +1,59 @@
+.write-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 16px;
+    font-family: sans-serif;
+}
+
+.write-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.write-form input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.write-button-group {
+    text-align: right;
+}
+
+.write-form button {
+    width: auto;
+    padding: 8px;
+    background-color: #fff;
+    margin-left: 3px;
+    color: #000;
+    border: 1px solid #000;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.write-form button:hover {
+    background-color: #ddd;
+}
+
+/* 모바일 대응 */
+@media (max-width: 768px) {
+    .write-container {
+        max-width: 100%;
+        margin: 20px 8px;
+        padding: 0 10px;
+    }
+
+    .write-form input {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .write-form button {
+        font-size: 14px;
+        padding: 6px 12px;
+        margin-left: 2px;
+    }
+}

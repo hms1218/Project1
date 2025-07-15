@@ -3,14 +3,15 @@ import { Link } from "react-router-dom"
 // 게시글 형태
 const PostItem = ({post}) => {
     return(
-        <div className="post-item">
-            <Link to={`/post/${post.id}`} className="post-title">
-                {post.title}
-            </Link>
-            <div className="post-meta">
-                작성자: {post.author} | {post.date}
-            </div>
-        </div>
+        <tr>
+            <td>{post.id}</td>
+            <td style={{textAlign: "left"}}>
+                <Link to={`/post/${post.id}`}>{post.title}</Link>
+            </td>
+            <td>{post.author}</td>
+            <td>{post.view}</td>
+            <td>{post.date}</td>
+        </tr>
     )
 }
 

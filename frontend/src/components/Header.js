@@ -18,18 +18,16 @@ const Header = () => {
     return(
         <header>
             <h1>LOGO</h1>
-            <div className="main_search">
-                <input type="text" placeholder="검색어를 입력해주세요." style={{width: '90%', height: '80%'}}/>
-                <button>검색</button>
-            </div>
             <nav>
                 <Link to="/">홈</Link>
                 <Link to="/about">소개</Link>
                 <Link to="/board">게시판</Link>
                 {userId ? (
                     <>
+                        <Link to="/mypage">마이페이지</Link>
                         <span>안녕하세요, {userId}님</span>
                         <button onClick={handleLogout}>로그아웃</button>
+                        
                     </>
                 ) : (
                     <>

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './Form.css'
-import { signInApi } from "../api/UserApi";
-import { useAuth } from "../context/AuthContext";
+import { signInApi } from "../../api/UserApi";
+import { useAuth } from "../../context/AuthContext";
 
 // 로그인페이지
 const SignIn = () => {
@@ -12,9 +12,6 @@ const SignIn = () => {
 
     const [id, setId] = useState('');
     const [pw, setPw] = useState('');
-
-    const [isIdValid, setIsIdValid] = useState(false);
-    const [isPwValid, setIsPwValid] = useState(false);
 
     const [Error, setError] = useState('');
 
@@ -70,9 +67,9 @@ const SignIn = () => {
                     />
                 </div>
                 { Error && <p style={{ color: "red", fontSize: "14px", textAlign: "left" }}>{Error}</p> }
-                <button type="submit">로그인</button>
-                <p><span onClick={() => navigate("/find-id")}>아이디 찾기</span>{' '}|{' '}<span onClick={() => navigate("/find-pw")}>비밀번호 찾기</span></p>
-                <p>회원이 아니신가요?{' '}<span onClick={() => navigate("/signup")}>회원가입으로 이동</span></p>
+                <button className="form-button" type="submit">로그인</button>
+                <p className="form"><span onClick={() => navigate("/find-id")}>아이디 찾기</span>{' '}|{' '}<span onClick={() => navigate("/find-pw")}>비밀번호 찾기</span></p>
+                <p className="form">회원이 아니신가요?{' '}<span onClick={() => navigate("/signup")}>회원가입으로 이동</span></p>
             </form>
         </div>
     )

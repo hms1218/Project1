@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { validateResetToken, resetPassword } from "../api/UserApi";
+import { validateResetToken, resetPassword } from "../../api/UserApi";
 
 const ResetPassword = () => {
 
@@ -54,10 +54,6 @@ const ResetPassword = () => {
         return <div>로딩 중...</div>
     }
 
-    // if(error){
-    //     return <div>{error}</div>
-    // }
-
     return(
         <div className="container">
             <h2>비밀번호 재설정</h2>
@@ -80,7 +76,7 @@ const ResetPassword = () => {
                 </div>
                 {error && <p style={{color: 'red', fontSize: '14px'}}>{error}</p>}
                 {message && <p style={{color: 'green', fontSize: '14px'}}>{message}</p>}
-                <button type="submit">비밀번호 변경</button>
+                <button className="form-button" type="submit">비밀번호 변경</button>
             </form>
         </div>
     )

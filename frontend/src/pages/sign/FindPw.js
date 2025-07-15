@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { requestPasswordReset } from "../../api/UserApi";
 import "./Form.css"
-import { findUserIdByEmail } from "../api/UserApi";
 
-//아이디 찾기
-const FindId = () => {
+//비밀번호 찾기
+const FindPw = () => {
     const navigate = useNavigate();
 
+    const [id, setId] = useState('');
     const [email, setEmail] = useState('');
     const [error, setError] = useState('');
     const [message, setMessage] = useState('');
@@ -15,6 +16,13 @@ const FindId = () => {
         e.preventDefault();
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if(!id){
+            setError("아이디를 입력해주세요.");
+            setMessage('');
+            return;
+        }
+
         if(!email){
             setError("이메일을 입력해주세요.");
             setMessage('');
@@ -29,20 +37,28 @@ const FindId = () => {
 
         try {
             setError('');
-            const data = await findUserIdByEmail(email);
-            setMessage(`가입된 아이디는 ${data.userId}입니다.`);
+            const data = await requestPasswordReset(email);
+            setMessage(data.message || "비밀번호 재설정 링크가 이메일로 발송되었습니다. 이메일을 확인해주세요.");
         } catch (error) {
-            console.log("error:", error)
-            const message = error.response?.data?.message || "등록된 아이디가 없습니다.";
-            setError(message);
+            const errMsg = error.response?.data?.message || "비밀번호 재설정 요청 중 오류가 발생했습니다.";
+            setError(errMsg);
             setMessage('');
         }
     }
 
     return(
         <div className="container">
-            <h2>아이디 찾기</h2>
+            <h2>비밀번호 찾기</h2>
             <form onSubmit={handleSubmit}>
+                <div className="form_group">
+                    <input 
+                        type="text"
+                        name="id"
+                        value={id}
+                        onChange={(e) => setId(e.target.value)}
+                        placeholder="아이디를 입력해주세요."
+                    />
+                </div>
                 <div className="form_group">
                     <input 
                         type="email"
@@ -54,18 +70,14 @@ const FindId = () => {
                 </div>
                 {error && <p style={{ color: "red", fontSize: "14px", textAlign: "left" }}>{error}</p>}
                 {message && <p style={{ color: "green", fontSize: "14px", textAlign: "left" }}>{message}</p>}
-                <button type="submit">아이디 찾기</button>
-                <p>
-                    아이디를 찾으셨나요?{' '}
-                    <span onClick={() => navigate("/signin")}>로그인으로 이동</span>
+                <button className="form-button" type="submit">비밀번호 찾기</button>
+                <p className="form">
+                    아이디를 잊으셨나요?{' '}
+                    <span onClick={() => navigate("/find-id")}>아이디 찾기로 이동</span>
                 </p>
-                {/* <p>
-                    비밀번호를 잊으셨나요?{' '}
-                    <span onClick={() => navigate("/find-pw")}>비밀번호 찾기로 이동</span>
-                </p> */}
             </form>
         </div>
     )
 }
 
-export default FindId;
+export default FindPw;

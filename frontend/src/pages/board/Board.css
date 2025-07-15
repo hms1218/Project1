@@ -1,0 +1,133 @@
+.board-container {
+    max-width: 1050px;
+    margin: 40px auto;
+    padding: 0 16px;
+    font-family: sans-serif;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 24px;
+    color: #333;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px;
+}
+
+thead {
+    background-color: #f5f5f5;
+}
+
+th {
+    padding: 12px;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+}
+
+td {
+    padding: 12px;
+    border-top: 1px solid #ddd;
+    text-align: center;
+}
+
+tbody tr:last-child {
+    border-bottom: 1px solid #ddd;
+}
+
+tbody tr:hover {
+    background-color: #f0f8ff; /* 연한 파랑 하이라이트 */
+    cursor: pointer;
+}
+
+a {
+    /* color: #007bff; */
+    color: #000;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.post-write {
+    text-align: right;
+}
+
+.post-write button {
+    padding: 8px 10px;
+    background-color: #fff;
+    margin: 3px;
+    color: #000;
+    border: 1px solid #000;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.post-write button:hover {
+    background-color: #ddd;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    gap: 6px;
+}
+
+.pagination button {
+    padding: 6px 0;
+    width: 32px;
+    text-align: center;
+    border: 1px solid #ccc;
+    background: white;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.pagination button.active {
+    background: #007bff;
+    color: white;
+    border: none;
+}
+
+.pagination button:hover {
+    background: #0056b3;
+    color: white;
+}
+
+/* 모바일 대응 */
+@media (max-width: 768px) {
+    .board-container {
+        max-width: 100%;
+        margin: 20px 8px;
+        padding: 0 8px;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+        margin-bottom: 16px;
+    }
+
+    table {
+        font-size: 14px;
+    }
+
+    th, td {
+        padding: 8px;
+    }
+
+    .post-write button {
+        padding: 6px 8px;
+        font-size: 14px;
+    }
+
+    .pagination button {
+        width: 28px;
+        padding: 4px 0;
+        font-size: 14px;
+    }
+}

@@ -1,0 +1,66 @@
+.edit-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    font-family: sans-serif;
+}
+
+.edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.edit-form input,
+.edit-form textarea {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.edit-form textarea {
+    resize: vertical;
+}
+
+.edit-buttons {
+    text-align: right;
+    gap: 3px;
+}
+
+.edit-buttons button {
+    width: auto;
+    padding: 8px;
+    background-color: #fff;
+    margin-left: 3px;
+    color: #000;
+    border: 1px solid #000;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.edit-buttons button:hover {
+    background-color: #aaa;
+}
+
+/* 모바일 대응 */
+@media (max-width: 768px) {
+    .edit-container {
+        max-width: 100%;
+        margin: 20px 8px;
+        padding: 10px;
+    }
+
+    .edit-form input,
+    .edit-form textarea {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .edit-buttons button {
+        font-size: 14px;
+        padding: 6px 10px;
+        margin-left: 2px;
+    }
+}
