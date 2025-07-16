@@ -1,7 +1,7 @@
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
-const MyEditor = ({content, setContent}) => {
+const MyEditor = ({content, setContent, className}) => {
 
     const modules = {
         toolbar: [
@@ -28,6 +28,7 @@ const MyEditor = ({content, setContent}) => {
 
     return (
         <ReactQuill
+            className={className}
             theme="snow"
             value={content}
             onChange={setContent}

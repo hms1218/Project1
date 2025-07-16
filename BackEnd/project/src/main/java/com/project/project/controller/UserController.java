@@ -1,5 +1,6 @@
 package com.project.project.controller;
 
+import java.io.File;
 import java.util.Map;
 import java.util.Optional;
 
@@ -20,6 +21,7 @@ import com.project.project.entity.UserEntity;
 import com.project.project.service.EmailService;
 import com.project.project.service.UserService;
 
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -117,6 +119,18 @@ public class UserController {
 	    userService.updatePassword(userId, newPassword);
 
 	    return ResponseEntity.ok(Map.of("message", "비밀번호가 성공적으로 변경되었습니다."));
+	}
+	
+	@PostMapping("/sendResume")
+	public ResponseEntity<String> sendResume(@RequestParam("email") String email) {
+	    try {
+	        File resume = new File("C:\\Users\\admin\\Desktop/resume.txt");
+	        emailService.sendResumeEmail(email, resume);
+	        return ResponseEntity.ok("이력서 메일 발송 완료");
+	    } catch (MessagingException e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("메일 발송 실패");
+	    }
 	}
 	
 }

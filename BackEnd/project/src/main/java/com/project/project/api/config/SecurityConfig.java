@@ -25,13 +25,20 @@ public class SecurityConfig {
             .csrf().disable()  // API라면 보통 CSRF 비활성화
             .authorizeHttpRequests()
                 .requestMatchers(
+                		// 로그인 / 회원가입
                 		"/users/signup", 
                 		"/users/signin",
                 		"/users/check-id",
                 		"/users/find-id",
                 		"/users/find-pw",
                 		"/users/validate-reset-token",
-                		"/users/reset-password"
+                		"/users/reset-password",
+                		"/users/sendResume",
+                		// 게시판
+                		"/posts",
+                		"/posts/**",
+                		//댓글
+                		"/comments/**"
                 		).permitAll() // 회원가입, 로그인은 인증없이 허용
                 .anyRequest().authenticated()  // 그 외 요청은 인증 필요
             .and()

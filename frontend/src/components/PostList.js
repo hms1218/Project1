@@ -1,7 +1,9 @@
 import PostItem from "./PostItem";
+import "../pages/board/Board.css"
 
 //게시글 리스트
-const PostList = ({posts}) => {
+const PostList = ({posts, currentPage, postsPerPage, totalPosts}) => {
+    console.log("totalPosts:", totalPosts);
     return(
         <table className="post-table">
             <thead>
@@ -14,9 +16,10 @@ const PostList = ({posts}) => {
                 </tr>
             </thead>
             <tbody>
-                {posts.map((post) => (
-                    <PostItem key={post.id} post={post} />
-                ))}
+                {posts.map((post, index) => {
+                    const number = totalPosts - ((currentPage - 1) * postsPerPage + index);
+                    return <PostItem key={post.postId} post={post} number={number}/>;
+                })}
             </tbody>
         </table>
     )

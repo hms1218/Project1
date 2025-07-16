@@ -5,6 +5,12 @@
     font-family: sans-serif;
 }
 
+.write-container h2 {
+    text-align: center;
+    margin-bottom: 24px;
+    color: #333;
+}
+
 .write-form {
     display: flex;
     flex-direction: column;
@@ -54,6 +60,38 @@
     .write-form button {
         font-size: 14px;
         padding: 6px 12px;
+        margin-left: 2px;
+    }
+}
+
+@media (max-width: 550px) {
+    .editor {
+        width: 90vw;
+        max-width: 500px;
+        box-sizing: border-box;
+    }
+}
+
+@media (max-width: 480px) {
+    .write-container {
+        max-width: 95%;          
+        margin: 15px auto;       
+        padding: 0 8px;          
+    }
+
+    .write-container h2 {
+        font-size: 14px;       
+        margin-bottom: 16px;
+    }
+
+    .write-form input {
+        font-size: 13px;         
+        padding: 7px 10px;      
+    }
+
+    .write-form button {
+        font-size: 13px;         
+        padding: 5px 10px;       
         margin-left: 2px;
     }
 }

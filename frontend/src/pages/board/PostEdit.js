@@ -2,34 +2,36 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./Edit.css";
 import MyEditor from "./MyEditor";
-
-const mockPosts = Array.from({ length: 137 }, (_, index) => ({
-    id: index + 1,
-    title: `Mock Post ${index + 1}`,
-    author: 'minseok',
-    date: '2025-07-15',
-    content: '에러 내용 및 해결 방법',
-    view: 0,
-    likes: 0,
-}));
+import FileUpload from "../../components/FileUpload";
+import { useAuth } from "../../context/AuthContext";
+import { getPostById, updatePost } from "../../api/PostApi";
 
 const PostEdit = () => {
     const {id} = useParams();
     const navigate = useNavigate();
-
-    const post = mockPosts.find(post => post.id === parseInt(id));
+    const { userId } = useAuth();
 
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
+    const [files, setFiles] = useState([]);
 
     useEffect(() => {
-        if(post){
-            setTitle(post.title);
-            setContent(post.content);
+        const getPost = async () => {
+            try {
+                const post = await getPostById(id);
+                setTitle(post.title);
+                setContent(post.content);
+                //파일 연동
+            } catch (error) {
+                console.error(error);
+                alert("게시글 정보를 불러오는 데 실패했습니다.");
+                navigate("/board");
+            }
         }
-    }, [post]);
+        getPost();
+    }, [id, navigate]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (title.trim() === "") {
@@ -42,19 +44,18 @@ const PostEdit = () => {
             return;
         }
 
-        const updatedPost = {
-            ...post,
-            title,
-            content,
-        };
+        const confirmed = window.confirm("수정하시겠습니까?");
+        if(!confirmed) return;
+        
+        try {
+            const updatedPost = { title, content };
+            await updatePost(id, updatedPost, userId);
 
-        console.log("수정된 게시글:", updatedPost);
-
-        // 추후 API 연동으로 서버에 저장
-        // await axios.post("/api/posts", newPost);
-        const confirmed = window.confirm("수정하시겠습니까?")
-        if(confirmed){
+            alert("게시글이 수정되었습니다.");
             navigate(`/post/${id}`);
+        } catch (error) {
+            console.error(error);
+            alert("게시글 수정 중 오류가 발생했습니다.");
         }
     }
 
@@ -75,7 +76,10 @@ const PostEdit = () => {
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="제목을 입력하세요"
                 />
-                <MyEditor content={content} setContent={setContent} />
+                <MyEditor className="editor" content={content} setContent={setContent} />
+
+                <FileUpload files={files} setFiles={setFiles} />
+
                 <div className="edit-buttons">
                     <button type="submit">수정</button>
                     <button type="button" onClick={handleCancel}>취소</button>

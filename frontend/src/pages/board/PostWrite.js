@@ -2,15 +2,20 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Write.css"
 import MyEditor from "./MyEditor";
+import FileUpload from "../../components/FileUpload";
+import { createPost } from "../../api/PostApi";
+import { useAuth } from "../../context/AuthContext";
 
 const PostWrite = () => {
 
     const navigate = useNavigate();
+    const { userId } = useAuth();
 
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
+    const [files, setFiles] = useState([]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (title.trim() === "") {
@@ -25,13 +30,18 @@ const PostWrite = () => {
 
         const newPost = {title, content};
 
-        console.log("작성된 게시글:", newPost);
-
-        // 추후 API 연동으로 서버에 저장
-        // await axios.post("/api/posts", newPost);
         const confirmed = window.confirm("작성하시겠습니까?")
-        if(confirmed){
+        if(!confirmed) return;
+
+        try {
+            const user_id = userId;
+            await createPost(newPost, user_id);
+
+            alert("게시글이 작성되었습니다.");
             navigate("/board");
+        } catch (error) {
+            console.error(error);
+            alert("게시글 작성 중 오류가 발생했습니다.");
         }
     }
 
@@ -52,7 +62,10 @@ const PostWrite = () => {
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="제목을 입력해주세요."
                 />
-                <MyEditor content={content} setContent={setContent} />
+                <MyEditor className="editor" content={content} setContent={setContent} />
+
+                <FileUpload className="file-upload-container" files={files} setFiles={setFiles} />
+
                 <div className="write-button-group">
                     <button type="submit">작성</button>
                     <button type="button" onClick={handleCancel}>취소</button>

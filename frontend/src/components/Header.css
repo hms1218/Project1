@@ -1,0 +1,171 @@
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 24px;
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #ddd;
+}
+
+.logo-container {
+    flex: 1;
+}
+
+.logo-container h1 {
+    margin: 0;
+    font-size: 40px;
+}
+
+.logo-container a {
+    text-decoration: none;
+    color: #333;
+}
+
+.nav-center {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+    gap: 12px;
+}
+
+.nav-right {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    min-width: 180px;
+}
+
+.nav-center a {
+    text-decoration: none;
+    color: #333;
+    margin-top: 2px;
+    background-color: #fff;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    font-size: 25px;
+    font-family: inherit;
+}
+
+.nav-right a,
+.nav-right button {
+    text-decoration: none;
+    color: #333;
+    margin-top: 2px;
+    background-color: #fff;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    font-family: inherit;
+}
+
+.nav-center a:hover,
+.nav-right a:hover,
+.nav-right button:hover {
+    text-decoration: underline;
+    opacity: 0.8;
+}
+
+.nav-right span {
+    font-weight: bold;
+    margin-top: 1px;
+    font-size: 15px;
+    color: #000;
+}
+
+.desktop-menu {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.hamburger-btn,
+.mobile-menu {
+    display: none;
+}
+
+.nav-right > a, /* 마이페이지, 로그아웃 링크 */
+.nav-right > button:not(.hamburger-btn) /* 로그아웃 버튼, 햄버거 제외 */,
+.nav-right > span /* userId */ {
+    display: inline-block;
+}
+
+/* 모바일 대응 */
+@media (max-width: 768px) {
+    .logo-container h1 {
+        font-size: 28px;
+    }
+
+    .nav-center a {
+        font-size: 18px;
+    }
+
+    .nav-right a,
+    .nav-right button {
+        font-size: 14px;
+    }
+}
+
+/* 햄버거 버튼 활성화 / 비활성화 */
+@media (max-width: 790px) {
+    .desktop-menu span {
+        display: inline;
+    }
+
+    .desktop-menu a,
+    .desktop-menu button {
+        display: none;
+    }
+
+    .hamburger-btn {
+        display: inline-block;
+        font-size: 24px;
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    .mobile-menu {
+        position: absolute;
+        right: 24px;
+        top: 60px;
+        background: white;
+        border: 1px solid #ddd;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo-container h1 {
+        font-size: 22px; 
+    }
+
+    .nav-center a {
+        font-size: 16px; 
+    }
+
+    .nav-right a,
+    .nav-right button {
+        font-size: 12px; 
+    }
+
+    .hamburger-btn {
+        font-size: 22px; 
+    }
+    
+    .mobile-menu {
+        right: 16px; 
+        top: 50px;   
+        padding: 8px; 
+        gap: 8px;     
+    }
+}

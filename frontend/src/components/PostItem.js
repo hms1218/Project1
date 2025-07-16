@@ -1,16 +1,18 @@
 import { Link } from "react-router-dom"
+import { FormatDateOnly } from "../utils/FormatDate";
+import "../pages/board/Board.css"
 
 // 게시글 형태
-const PostItem = ({post}) => {
+const PostItem = ({post, number}) => {
     return(
         <tr>
-            <td>{post.id}</td>
+            <td>{number}</td>
             <td style={{textAlign: "left"}}>
-                <Link to={`/post/${post.id}`}>{post.title}</Link>
+                <Link to={`/post/${post.postId}`}>{post.title}</Link>
             </td>
             <td>{post.author}</td>
             <td>{post.view}</td>
-            <td>{post.date}</td>
+            <td>{FormatDateOnly(post.createdAt)}</td>
         </tr>
     )
 }

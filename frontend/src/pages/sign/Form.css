@@ -82,8 +82,9 @@ p span:hover {
 /* 모바일 대응 */
 @media (max-width: 768px) {
     .container {
-        max-width: 50%;
-        margin: 20px auto;
+        width: 90%;
+        max-width: 400px;
+        margin: 30px auto;
         padding: 20px 15px;
     }
 
@@ -95,7 +96,7 @@ p span:hover {
     .form_group input[type="text"],
     .form_group input[type="password"],
     .form_group input[type="email"] {
-        width: 93%;
+        width: 94.5%;
         font-size: 14px;
         padding: 8px 10px;
     }
@@ -107,5 +108,32 @@ p span:hover {
 
     .form {
         font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        width: 95%;
+        padding: 15px 10px;
+    }
+
+    .container h2 {
+        font-size: 18px;
+    }
+
+    .form_group input[type="text"],
+    .form_group input[type="password"],
+    .form_group input[type="email"] {
+        font-size: 13px;
+        padding: 7px 9px;
+    }
+
+    .form-button {
+        font-size: 15px;
+        padding: 9px;
+    }
+
+    .form {
+        font-size: 12px;
     }
 }

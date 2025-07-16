@@ -31,9 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 		String token = resolveToken(request);
 
         String path = request.getServletPath();
-        if (path.equals("/users/signup") || path.equals("/users/signin") || path.equals("/users/check-id")
-        	|| path.equals("/users/find-id") || path.equals("/users/find-pw") || 
-        	path.equals("/users/validate-reset-token") || path.equals("/users/reset-password")) {
+        if (path.startsWith("/users") || path.startsWith("/posts") || path.startsWith("/comments")) {
             filterChain.doFilter(request, response);
             return;
         }

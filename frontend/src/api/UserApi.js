@@ -69,3 +69,11 @@ export const resetPassword = async (token, newPassword) => {
     });
     return res.data;
 };
+
+//이력서 전송
+export const sendResume = async (email) => {
+    const response = await axios.post(`${API_BASE_URL}/users/sendResume`, null, {
+        params: { email }
+    });
+    return response.data;
+};

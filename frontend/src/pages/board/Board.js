@@ -1,35 +1,47 @@
 import PostList from "../../components/PostList";
 import { useNavigate } from "react-router-dom";
 import "./Board.css"
-import { useState } from "react";
-
-const mockPosts = Array.from({ length: 137 }, (_, index) => ({
-    id: index + 1,
-    title: `Mock Post ${index + 1}`,
-    author: 'minseok',
-    date: '2025-07-15',
-    content: '에러 내용 및 해결 방법',
-    view: 0,
-    likes: 0,
-}));
+import { useEffect, useState } from "react";
+import { getAllPosts } from "../../api/PostApi";
 
 const Board = () => {
 
     const navigate = useNavigate();
 
+    const [posts, setPosts] = useState([]);
+
     const [currentPage, setCurrentPage] = useState(1); //현재 페이지
     const postsPerPage = 10; //한 페이지에 보여줄 게시글 수
     const pagesPerGroup = 5;
 
-    const totalPages = Math.ceil(mockPosts.length / postsPerPage); //전체 페이지 수
+    const totalPages = Math.ceil(posts.length / postsPerPage); //전체 페이지 수
 
     const indexOfLastPost = currentPage * postsPerPage; //현재 페이지의 마지막 게시글 번호
     const indexOfFirstPost = indexOfLastPost - postsPerPage; //현재 페이지의 첫번째 게시글 번호
-    const currentPosts = mockPosts.slice(indexOfFirstPost, indexOfLastPost); //현재 페이지의 게시글 수
+    const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost); //현재 페이지의 게시글 수
 
     const currentGroup = Math.ceil(currentPage / pagesPerGroup); //현재 페이징 그룹
     const startPage = (currentGroup - 1) * pagesPerGroup + 1; //그룹의 첫번째페이지
     const endPage = Math.min(startPage + pagesPerGroup - 1, totalPages); //그룹의 마지막페이지
+
+    useEffect(() => {
+        const getPosts = async () => {
+            try {
+                const res = await getAllPosts();
+
+                const sortedPosts = res.sort((a, b) => {
+                    const dateA = new Date(a.updatedAt || a.createdAt);
+                    const dateB = new Date(b.updatedAt || b.createdAt);
+                    return dateB - dateA; // 최신순
+                });
+
+                setPosts(sortedPosts);
+            } catch (error) {
+                console.error("게시글 조회 실패",error);
+            }
+        }
+        getPosts();
+    },[])
 
     const handlePrevGroup = () => {
         if (currentPage > 1) {
@@ -54,7 +66,7 @@ const Board = () => {
             <div className="post-write">
                 <button onClick={() => navigate("/write")}>글쓰기</button>
             </div>
-            <PostList posts={currentPosts} />
+            <PostList posts={currentPosts} currentPage={currentPage} postsPerPage={postsPerPage} totalPosts={posts.length}/>
 
             <div className="pagination">
                 <button onClick={handlePrevGroup} disabled={currentPage === 1}>

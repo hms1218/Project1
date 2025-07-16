@@ -1,25 +1,31 @@
-import { useEffect, useState } from "react";
-import PostList from "../components/PostList";
+import "./Home.css";
+import mainImage from "../assets/mainImage.jpg";
+import { useNavigate } from "react-router-dom";
 
 //메인 홈
 const Home = () => {
-    const [posts, setPosts] = useState([]);
 
-    useEffect(() => {
-    // 더미 데이터
-        setPosts([
-        { id: 1, title: '타이틀1', author: '관리자', date: '2025-07-12' },
-        { id: 2, title: '타이틀2', author: '관리자', date: '2025-07-11' },
-        ]);
-    }, []);
+    const navigate = useNavigate();
 
-    return(
-        <div>
-            {/* <img src={mainImage} alt="main_image" style={{ width: '100%', maxHeight: '400px', objectFit: 'cover' }}/> */}
-            <h2>최신게시글</h2>
-            <PostList posts={posts} />
+    return (
+        <div className="home-container">
+            <img
+                src={mainImage}
+                alt="Main Banner"
+                className="home-banner"
+            />
+            <h1 className="home-title">환영합니다!</h1>
+            <p className="home-description">
+                초보 개발자의 에러 파헤치기 ! 같이 공유해요 !
+            </p>
+            <button
+                onClick={() => navigate("/board")}
+                className="home-button"
+            >
+                게시판 바로가기
+            </button>
         </div>
-    )
-}
+    );
+};
 
 export default Home;

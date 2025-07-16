@@ -5,16 +5,17 @@
     font-family: sans-serif;
 }
 
-h2 {
+.board-container h2 {
     text-align: center;
     margin-bottom: 24px;
     color: #333;
 }
 
-table {
+table.post-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 16px;
+    table-layout: fixed;
 }
 
 thead {
@@ -34,6 +35,22 @@ td {
     text-align: center;
 }
 
+/* 컬럼별 정렬 및 너비 조정 */
+.post-table th:nth-child(1),
+.post-table td:nth-child(1) {
+    width: 60px;
+    text-align: center;
+}
+
+.post-table th:nth-child(3),
+.post-table td:nth-child(3),
+.post-table th:nth-child(4),
+.post-table td:nth-child(4),
+.post-table th:nth-child(5),
+.post-table td:nth-child(5) {
+    width: 100px;
+}
+
 tbody tr:last-child {
     border-bottom: 1px solid #ddd;
 }
@@ -44,7 +61,6 @@ tbody tr:hover {
 }
 
 a {
-    /* color: #007bff; */
     color: #000;
     text-decoration: none;
 }
@@ -107,17 +123,26 @@ a:hover {
         padding: 0 8px;
     }
 
-    h2 {
-        font-size: 1.5rem;
+    .board-container h2 {
+        font-size: 20px;
         margin-bottom: 16px;
     }
 
-    table {
+    table.post-table {
         font-size: 14px;
     }
 
     th, td {
-        padding: 8px;
+        padding: 8px 6px;
+    }
+
+    .post-table th:nth-child(3),
+    .post-table td:nth-child(3),
+    .post-table th:nth-child(4),
+    .post-table td:nth-child(4),
+    .post-table th:nth-child(5),
+    .post-table td:nth-child(5) {
+        width: 80px;
     }
 
     .post-write button {

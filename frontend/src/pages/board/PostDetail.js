@@ -1,28 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import "./Detail.css"
-
-const mockPosts = Array.from({ length: 137 }, (_, index) => ({
-    id: index + 1,
-    title: `Mock Post ${index + 1}`,
-    author: 'minseok',
-    date: '2025-07-15',
-    content: '에러 내용 및 해결 방법',
-    view: 0,
-    likes: 0,
-}));
-
-const mockComments = Array.from({ length: 3 }, (_, index) => ({
-    id: index + 1,
-    postId: index + 1, // 각 댓글이 다른 postId를 갖도록, 필요 시 원하는 번호로 고정 가능
-    author: ['jihyun', 'alex', 'choi'][index],
-    content: [
-        '좋은 글 감사합니다!',
-        '많이 배우고 갑니다.',
-        'JWT 이해가 잘 됐어요!'
-    ][index],
-}));
+import { getPostById, likesPost, deletePost, checkIfLiked, increaseViewCount } from "../../api/PostApi";
+import { getCommentsByPostId, addComment, updateComment, deleteComment } from "../../api/CommentApi";
+import { FormatDate } from "../../utils/FormatDate";
 
 // 게시글 상세페이지
 const PostDetail = () => {
@@ -30,51 +12,169 @@ const PostDetail = () => {
     const navigate = useNavigate();
     const { userId } = useAuth();
 
-    const post = mockPosts.find(post => post.id === parseInt(id));
-    const [comment, setComment] = useState(mockComments.filter(c => c.postId === parseInt(id)));
+    const [post, setPost] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    const [comment, setComment] = useState([]);
     const [newComment, setNewComment] = useState('');
 
-    const [likes, setLikes] = useState(post.likes);
+    const [editCommentId, setEditCommentId] = useState(null);
+    const [editContent, setEditContent] = useState('')
+
+    const [likes, setLikes] = useState(0);
     const [isLiked, setIsLiked] = useState(false);
 
-    const handleCommentSubmit = (e) => {
+    useEffect(() => {
+        const getPost = async () => {
+            console.log("id:",id)
+            try {
+                let viewedPosts = {};
+                try {
+                    viewedPosts = JSON.parse(localStorage.getItem("viewedPosts")) || {};
+                    console.log("로컬스토리지 조회:", viewedPosts);
+                } catch (e) {
+                    viewedPosts = {};
+                }
+
+                const idStr = String(id);
+                    if (!(idStr in viewedPosts)) {
+                    console.log("조회수 증가 API 호출");
+                await increaseViewCount(id);
+                    viewedPosts[idStr] = Date.now(); // 또는 다른 값
+                    localStorage.setItem("viewedPosts", JSON.stringify(viewedPosts));
+                    console.log("로컬스토리지에 id 저장 후 상태:", viewedPosts);
+                } else {
+                    console.log("이미 조회한 게시글입니다:", idStr);
+                }
+                
+                const res = await getPostById(id);
+                console.log("응답:", res)
+                setPost(res);
+                setLikes(res.likes);
+                if(userId){
+                    const liked = await checkIfLiked(id,userId);
+                    setIsLiked(liked)
+                }
+
+                const getComments = await getCommentsByPostId(id);
+                setComment(getComments);
+                console.log("댓글:",getComments)
+
+                setLoading(false);
+            } catch (error) {
+                setError("게시글 조회 실패");
+                setLoading(false);
+            }
+        }
+        getPost();
+    },[id, userId])
+
+    if (loading) return <p>로딩 중...</p>;
+    if (error) return <p>{error}</p>;
+    if (!post) return <p>게시글이 없습니다.</p>;
+
+    const handleCommentSubmit = async (e) => {
         e.preventDefault();
 
         if(newComment.trim() === '') return;
 
-        const nextComment = {
-            id : comment.length + 1,
-            postId : post.id,
-            author : userId ? userId : "익명",
-            content : newComment,
+        if(!window.confirm("댓글을 등록하시겠습니까?")) return;
+        try {
+            await addComment(id, newComment, userId);
+            const updatedComments = await getCommentsByPostId(id);
+            setComment(updatedComments);
+            setNewComment("");
+        } catch (error) {
+            console.error(error);
+            alert("댓글 작성 실패");
         }
-
-        setComment([...comment, nextComment]);
-        setNewComment('');
     }
 
-    const handleDelete = () => {
-        if(window.confirm("삭제하시겠습니까?")){
+    const handleDeleteComment = async (commentId) => {
+        if (!window.confirm("댓글을 삭제하시겠습니까?")) return;
+        try {
+            await deleteComment(commentId, userId);
+            const updatedComments = await getCommentsByPostId(id);
+            setComment(updatedComments);
             alert("삭제되었습니다.")
-            navigate("/board")
+        } catch (error) {
+            console.error(error);
+            alert("댓글 삭제 실패");
         }
     }
 
-    const handleLikes = () => {
-        if(isLiked){
-            setLikes(prev => prev - 1);
-        } else{
-            setLikes(prev => prev + 1);
+    const handleDelete = async () => {
+        if(window.confirm("삭제하시겠습니까?")){
+            try {
+                await deletePost(id, userId);
+                alert("삭제되었습니다.")
+                navigate("/board")
+            } catch (error) {
+                console.error(error);
+                alert("삭제 실패");
+            }
+            
         }
-        setIsLiked(prev => !prev)
+    }
+
+    //댓글 수정
+    const startEditing = (commentId, currentContent) => {
+        setEditCommentId(commentId);
+        setEditContent(currentContent);
+    };
+
+    const cancelEditing = () => {
+        setEditCommentId(null);
+        setEditContent("");
+    };
+
+    const submitEdit = async () => {
+        if (editContent.trim() === "") {
+            alert("내용을 입력해주세요.");
+            return;
+        }
+
+        if (!window.confirm("댓글을 수정하시겠습니까?")) return;
+
+        try {
+            await updateComment(editCommentId, editContent, userId);
+            const updatedComments = await getCommentsByPostId(id);
+            setComment(updatedComments);
+            setEditCommentId(null);
+            setEditContent("");
+            alert("댓글이 수정되었습니다.");
+        } catch (error) {
+            console.error(error);
+            alert("댓글 수정 실패");
+        }
+    };
+
+    const handleLikes = async () => {
+        if (!userId) {
+            alert("로그인이 필요합니다.");
+            return;
+        }
+        try {
+            const updatedLikes = await likesPost(id, userId);
+            setLikes(updatedLikes);
+            const liked = await checkIfLiked(id, userId);
+            setIsLiked(liked);
+        } catch (error) {
+            console.error(error);
+            alert("좋아요 처리 실패");
+        }
     }
 
     return(
         <div className="detail-container">
             <h1>{post.title}</h1>
-            <p className="detail-meta">작성자 : {post.author} | 작성일 : {post.date} | 조회수 : {post.view} | 추천수 : {likes}</p>
+            <p className="detail-meta">작성자 : {post.author} | 작성일 : {FormatDate(post.updatedAt ?? post.createdAt)} {post.updatedAt && <>(수정됨)</>} | 조회수 : {post.view} | 추천수 : {likes}</p>
             <hr/>
-            <p className="detail-content">{post.content}</p>
+            <div 
+                className="detail-content" 
+                dangerouslySetInnerHTML={{ __html: post.content }} 
+            />
             <div className="detail-button">
                 <button onClick={() => navigate(`/post/${id}/edit`)}>수정</button>
                 <button onClick={handleDelete}>삭제</button>
@@ -82,14 +182,41 @@ const PostDetail = () => {
                 <button onClick={() => navigate("/board")}>목록으로</button>
             </div>
             <hr/>
+            
             <p className="detail-comment">댓글({comment.length})</p>
             <ul className="comment-list">
-                {comment.map(comment => (
-                    <li key={comment.id}>
-                        <strong>{comment.author}</strong> 4분 전
-                        <p>{comment.content}</p>
-                    </li>
-                ))}
+            {comment.map(comment => (
+                <li key={comment.commentId}>
+                <div className="comment-header">
+                    <strong>{comment.author}</strong>
+                    <div className="comment-actions">
+                    <span className="comment-time">{FormatDate(comment.updatedAt ?? comment.createdAt)} {post.updatedAt && <>(수정됨)</>}</span>
+                    {comment.author === userId && editCommentId !== comment.commentId && (
+                        <>
+                        <button onClick={() => startEditing(comment.commentId, comment.content)}>수정</button>
+                        <button onClick={() => handleDeleteComment(comment.commentId)}>삭제</button>
+                        </>
+                    )}
+                    </div>
+                </div>
+                {editCommentId === comment.commentId ? (
+                    <>
+                    <input
+                        className="comment-edit-input"
+                        type="text"
+                        value={editContent}
+                        onChange={(e) => setEditContent(e.target.value)}
+                    />
+                    <div className="comment-edit-buttons">
+                        <button onClick={submitEdit}>저장</button>
+                        <button onClick={cancelEditing} style={{ marginLeft: "10px" }}>취소</button>
+                    </div>
+                    </>
+                ) : (
+                    <p className="comment-content">{comment.content}</p>
+                )}
+                </li>
+            ))}
             </ul>
             <form className="comment-form" onSubmit={handleCommentSubmit}>
                 <input 
