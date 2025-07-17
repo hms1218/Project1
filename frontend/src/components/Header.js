@@ -27,7 +27,7 @@ const Header = () => {
             </div>
             <div className="nav-center">
                 <Link to="/">홈</Link>
-                <Link to="/about">소개</Link>
+                <Link to="/about">소개임</Link>
                 <Link to="/board">게시판</Link>
             </div>
             <div className="nav-right">
