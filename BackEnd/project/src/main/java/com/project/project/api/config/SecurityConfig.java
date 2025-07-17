@@ -25,6 +25,7 @@ public class SecurityConfig {
             .csrf().disable()  // API라면 보통 CSRF 비활성화
             .authorizeHttpRequests()
                 .requestMatchers(
+                		"/",
                 		// 로그인 / 회원가입
                 		"/users/signup", 
                 		"/users/signin",

@@ -124,7 +124,7 @@ public class UserController {
 	@PostMapping("/sendResume")
 	public ResponseEntity<String> sendResume(@RequestParam("email") String email) {
 	    try {
-	        File resume = new File("C:\\Users\\admin\\Desktop/resume.txt");
+	        File resume = new File("C:\\Users\\admin\\Desktop/resume.hwp");
 	        emailService.sendResumeEmail(email, resume);
 	        return ResponseEntity.ok("이력서 메일 발송 완료");
 	    } catch (MessagingException e) {

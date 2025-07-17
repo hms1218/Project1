@@ -23,6 +23,7 @@ const Resume = () => {
             alert("이력서 발송 중 오류가 발생했습니다.");
         } finally {
             setLoading(false);
+            setEmail('');
         }
     };
 

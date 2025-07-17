@@ -29,9 +29,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 									throws ServletException, IOException {
 		System.out.println("JwtAuthenticationFilter is running");
 		String token = resolveToken(request);
+		System.out.println("Extracted token: " + token);
 
         String path = request.getServletPath();
-        if (path.startsWith("/users") || path.startsWith("/posts") || path.startsWith("/comments")) {
+        System.out.println("Request path: " + path);
+        if (path.startsWith("/") || path.startsWith("/users") || path.startsWith("/posts") || path.startsWith("/comments")) {
             filterChain.doFilter(request, response);
             return;
         }

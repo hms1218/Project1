@@ -60,12 +60,12 @@ tbody tr:hover {
     cursor: pointer;
 }
 
-a {
+.board-container a {
     color: #000;
     text-decoration: none;
 }
 
-a:hover {
+.board-container a:hover {
     text-decoration: underline;
 }
 
