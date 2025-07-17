@@ -16,23 +16,23 @@ jobs:
       - name: set up node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '22' # 필요에 따라 버전 조정 18 -> 22로 변경함
+          node-version: 18 # 필요에 따라 버전 조정 18 -> 22로 변경함
 
       - name: Install dependencies
         run: npm install
-        working-directory: ./frontend
+        working-directory: frontend
 
       - name: build React app
         run: npm run build
-        working-directory: ./frontend
+        working-directory: frontend
 
       - name: deploy to s3
         uses: jakejarvis/s3-sync-action@v0.5.1
         with: 
-          args: --acl public-read --delete
+          args: --delete
         env:
           AWS_S3_BUCKET: ${{ secrets.S3_BUCKET }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ap-northeast-2
-          SOURCE_DIR: './Front/build'
+          SOURCE_DIR: './frontend/build'
