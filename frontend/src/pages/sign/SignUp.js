@@ -27,14 +27,13 @@ const SignUp = () => {
         const idRegex = /^[a-z][a-z0-9]{4,14}$/;
         
         if(!idRegex.test(value)){
-            setIdError("아이디는 영문자로 시작하는 5~15자여야 합니다.");
+            setIdError("아이디는 영문자(소문자) 5~15자여야 합니다.");
             setIsIdValid(false);
             return;
         } 
 
         try {
             const res = await checkIdDuplicate(value);
-            console.log("res:", res)
             if(res.exists){
                 setIdError("이미 사용 중인 아이디입니다.");
                 setIsIdValid(false);

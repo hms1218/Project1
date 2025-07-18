@@ -1,5 +1,6 @@
 package com.project.project.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,6 +25,7 @@ public class PostService {
     private final UserRepository userRepository;
     private final PostLikesRepository postLikesRepository;
     
+    //전체 게시글 조회
     public List<PostDTO> getAllPosts() {
         return postRepository.findAllByOrderByCreatedAtDesc()
                 .stream()
@@ -31,6 +33,7 @@ public class PostService {
                 .collect(Collectors.toList());
     }
     
+    //조회수 증가
     public void increaseViewCount(Long id) {
         postRepository.findById(id).ifPresent(post -> {
             post.setView(post.getView() + 1);
@@ -38,18 +41,21 @@ public class PostService {
         });
     }
 
+    //특정 게시글 조회
     public PostDTO getPost(Long id) {
         PostEntity post = postRepository.findById(id).orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
 
         return PostDTO.fromEntity(post);
     }
 
+    //게시글 등록
     public Long createPost(PostDTO dto, String userId) {
         UserEntity user = userRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
         PostEntity post = dto.toEntity(user);
         return postRepository.save(post).getPostId();
     }
 
+    //게시글 수정
     public void updatePost(Long id, PostDTO dto, String userId) {
         PostEntity post = postRepository.findById(id).orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
         if (!post.getUser().getUserId().equals(userId)) {
@@ -57,9 +63,12 @@ public class PostService {
         }
         post.setTitle(dto.getTitle());
         post.setContent(dto.getContent());
+        post.setUpdatedAt(LocalDateTime.now());
+        
         postRepository.save(post);
     }
 
+    //게시글 삭제
     public void deletePost(Long id, String userId) {
         PostEntity post = postRepository.findById(id).orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
         if (!post.getUser().getUserId().equals(userId)) {
@@ -68,6 +77,7 @@ public class PostService {
         postRepository.delete(post);
     }
 
+    //추천
     public int toggleLike(Long id, String userId) {
         PostEntity post = postRepository.findById(id)
         		.orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
@@ -94,6 +104,7 @@ public class PostService {
         return post.getLikes();
     }
     
+    //사용자의 추천 여부
     public boolean isPostLikedByUser(Long id, String userId) {
         PostEntity post = postRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));

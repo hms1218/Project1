@@ -11,7 +11,8 @@ const PostDetail = () => {
     const {id} = useParams();
     const navigate = useNavigate();
     const { userId } = useAuth();
-
+    const ADMIN_ID = "rhkwmq93";
+    
     const [post, setPost] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -27,12 +28,10 @@ const PostDetail = () => {
 
     useEffect(() => {
         const getPost = async () => {
-            console.log("id:",id)
             try {
                 let viewedPosts = {};
                 try {
                     viewedPosts = JSON.parse(localStorage.getItem("viewedPosts")) || {};
-                    console.log("로컬스토리지 조회:", viewedPosts);
                 } catch (e) {
                     viewedPosts = {};
                 }
@@ -166,18 +165,29 @@ const PostDetail = () => {
         }
     }
 
+    console.log("등록시간:" , post.createdAt);
+    console.log("수정시간:" , post.updatedAt);
+
     return(
         <div className="detail-container">
             <h1>{post.title}</h1>
-            <p className="detail-meta">작성자 : {post.author} | 작성일 : {FormatDate(post.updatedAt ?? post.createdAt)} {post.updatedAt && <>(수정됨)</>} | 조회수 : {post.view} | 추천수 : {likes}</p>
+            <p className="detail-meta">
+                작성자 : {post.author === ADMIN_ID ? "관리자" : post.author} | 
+                작성일 : {FormatDate(post.updatedAt ?? post.createdAt)} {post.updatedAt && <>(수정됨)</>} | 
+                조회수 : {post.view} | 
+                추천수 : {likes}</p>
             <hr/>
             <div 
                 className="detail-content" 
                 dangerouslySetInnerHTML={{ __html: post.content }} 
             />
             <div className="detail-button">
-                <button onClick={() => navigate(`/post/${id}/edit`)}>수정</button>
-                <button onClick={handleDelete}>삭제</button>
+                {(post && (post.author === userId || userId === ADMIN_ID)) && (
+                <>
+                    <button onClick={() => navigate(`/post/${id}/edit`)}>수정</button>
+                    <button onClick={handleDelete}>삭제</button>
+                </>
+                )}
                 <button onClick={handleLikes} className={isLiked ? "liked-button" : ""}>👍추천</button>
                 <button onClick={() => navigate("/board")}>목록으로</button>
             </div>
@@ -191,7 +201,7 @@ const PostDetail = () => {
                     <strong>{comment.author}</strong>
                     <div className="comment-actions">
                     <span className="comment-time">{FormatDate(comment.updatedAt ?? comment.createdAt)} {post.updatedAt && <>(수정됨)</>}</span>
-                    {comment.author === userId && editCommentId !== comment.commentId && (
+                    {(comment.author === userId || userId === ADMIN_ID) && editCommentId !== comment.commentId && (
                         <>
                         <button onClick={() => startEditing(comment.commentId, comment.content)}>수정</button>
                         <button onClick={() => handleDeleteComment(comment.commentId)}>삭제</button>
