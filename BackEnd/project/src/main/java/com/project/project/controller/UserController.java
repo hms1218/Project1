@@ -92,7 +92,7 @@ public class UserController {
 		
 		String token = userService.createPasswordResetToken(userOpt.get().getUserId());
 		
-		String resetUrl = "http://localhost:3000/reset-password?token=" + token;
+		String resetUrl = "http://project-bucbucket.s3-website.ap-northeast-2.amazonaws.com/reset-password?token=" + token;
 		emailService.sendPasswordResetEmail(email, resetUrl);
 		
 		return ResponseEntity.ok(Map.of("message", "비밀번호 재설정 링크를 이메일로 발송했습니다."));
@@ -124,7 +124,7 @@ public class UserController {
 	@PostMapping("/sendResume")
 	public ResponseEntity<String> sendResume(@RequestParam("email") String email) {
 	    try {
-	        File resume = new File("C:\\Users\\admin\\Desktop/resume.hwp");
+	        File resume = new File("C:\\Users\\admin\\Desktop\\Project1\\BackEnd\\project\\src\\main\\resources\\resume\\resume.pdf");
 	        emailService.sendResumeEmail(email, resume);
 	        return ResponseEntity.ok("이력서 메일 발송 완료");
 	    } catch (MessagingException e) {
