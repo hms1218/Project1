@@ -48,32 +48,51 @@ export const findUserIdByEmail = async (email) => {
 
 //비밀번호 찾기
 export const requestPasswordReset = async (email) => {
-    const res = await axios.post(`${API_BASE_URL}/users/find-pw`, null, {
-        params: { email }
-    });
-    return res.data;
+    try {
+        const res = await axios.post(`${API_BASE_URL}/users/find-pw`, null, {
+            params: { email }
+        });
+        return res.data;
+    } catch (error) {
+        console.error("비밀번호 찾기 실패", error)
+        throw error;
+    }   
 };
 
 //비밀번호 토큰 검증
 export const validateResetToken = async (token) => {
-    const res = await axios.get(`${API_BASE_URL}/users/validate-reset-token`, {
-        params: { token }
-    });
-    return res.data;
+    try {
+        const res = await axios.get(`${API_BASE_URL}/users/validate-reset-token`, {
+            params: { token }
+        });
+        return res.data;
+    } catch (error) {
+        console.error("토큰 검증 실패", error);
+        throw error;
+    }
+
 };
 
 //비밀번호 재설정
 export const resetPassword = async (token, newPassword) => {
-    const res = await axios.post(`${API_BASE_URL}/users/reset-password`, null, {
-        params: { token, newPassword }
-    });
-    return res.data;
+    try {
+        const res = await axios.post(`${API_BASE_URL}/users/reset-password`, null, {
+            params: { token, newPassword }
+        });
+        return res.data;
+    } catch (error) {
+        console.error("비밀번호 재설정 실패", error)
+        throw error;
+    }   
 };
 
 //이력서 전송
 export const sendResume = async (email) => {
-    const response = await axios.post(`${API_BASE_URL}/users/sendResume`, null, {
-        params: { email }
-    });
-    return response.data;
+    try {
+        const res = await axios.post(`${API_BASE_URL}/users/sendResume`, { email });
+        return res.data;
+    } catch (error) {
+        console.error("이력서 전송 실패",error)
+        throw error; 
+    }    
 };

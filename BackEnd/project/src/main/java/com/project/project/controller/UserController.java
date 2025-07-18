@@ -122,7 +122,8 @@ public class UserController {
 	}
 	
 	@PostMapping("/sendResume")
-	public ResponseEntity<String> sendResume(@RequestParam("email") String email) {
+	public ResponseEntity<String> sendResume(@RequestBody Map<String, String> request) {
+		String email = request.get("email");
 	    try {
 	        File resume = new File("C:\\Users\\admin\\Desktop\\Project1\\BackEnd\\project\\src\\main\\resources\\resume\\resume.pdf");
 	        emailService.sendResumeEmail(email, resume);

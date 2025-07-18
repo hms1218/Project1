@@ -1,6 +1,7 @@
 package com.project.project.api.auth;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,6 +19,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 
 	private final JwtTokenProvider jwtTokenProvider;
 	
+	// 인증 제외 경로 리스트
+    private static final List<String> EXCLUDED_PATHS = List.of(
+        "/",
+        "/users/signup",
+        "/users/signin",
+        "/users/check-id",
+        "/users/find-id",
+        "/users/find-pw",
+        "/users/validate-reset-token",
+        "/users/reset-password",
+        "/users/sendResume",
+        "/posts",
+        "/comments"
+    );
+	
 	public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
@@ -28,18 +44,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 									FilterChain filterChain)
 									throws ServletException, IOException {
 		System.out.println("JwtAuthenticationFilter is running");
-		String token = resolveToken(request);
-		System.out.println("Extracted token: " + token);
 
         String path = request.getServletPath();
-        System.out.println("Request path: " + path);
-        if (path.startsWith("/") || path.startsWith("/users") || path.startsWith("/posts") || path.startsWith("/comments")) {
+        
+        boolean excluded = EXCLUDED_PATHS.stream().anyMatch(path::startsWith);
+        if (excluded) {
             filterChain.doFilter(request, response);
             return;
         }
         
-        System.out.println("Request path: " + path);
-        System.out.println("Authorization header: " + request.getHeader("Authorization"));
+        String token = resolveToken(request);
 
         if (token != null && jwtTokenProvider.validateToken(token)) {
             String userId = jwtTokenProvider.getUserIdFromToken(token);
