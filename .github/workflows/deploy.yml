@@ -47,7 +47,8 @@ jobs:
             ls -l /home/ubuntu/project-0.0.1-SNAPSHOT.jar
 
             echo "Killing existing Spring Boot process if running..."
-            screen -S spring-server -X quit || true
+            pkill -f 'project-0.0.1-SNAPSHOT.jar' || true
+            sleep 3
 
             echo "Starting Spring Boot in new screen session..."
             screen -dmS spring-server java -jar /home/ubuntu/project-0.0.1-SNAPSHOT.jar
