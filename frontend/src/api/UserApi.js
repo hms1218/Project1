@@ -89,7 +89,7 @@ export const resetPassword = async (token, newPassword) => {
 //이력서 전송
 export const sendResume = async (email) => {
     try {
-        const res = await axios.post(`${API_BASE_URL}/users/sendResume`, { email });
+        const res = await axios.post(`${API_BASE_URL}/users/send-resume`, { email });
         return res.data;
     } catch (error) {
         console.error("이력서 전송 실패",error)
