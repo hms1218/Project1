@@ -42,8 +42,8 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           script: |
-            echo "Moving uploaded JAR to deployment path..."
-            mv -f /home/ubuntu/temp/project-0.0.1-SNAPSHOT.jar /home/ubuntu/project-0.0.1-SNAPSHOT.jar
+            echo "Uploaded file list:"
+            ls -l /home/ubuntu/project-0.0.1-SNAPSHOT.jar
 
             echo "Killing existing Spring Boot process if running..."
             screen -S spring-server -X quit || true
