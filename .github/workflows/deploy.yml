@@ -33,7 +33,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           source: "BackEnd/project/build/libs/project-0.0.1-SNAPSHOT.jar"
-          target: "/home/ubuntu/project/build/libs/" #수정
+          target: "/home/ubuntu/"
 
       - name: Execute SSH Commands on EC2
         uses: appleboy/ssh-action@v1.0.0
@@ -42,9 +42,6 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           script: |
-            echo "Copying JAR to deployment path..."
-            cp /home/ubuntu/project/build/libs/project-0.0.1-SNAPSHOT.jar /home/ubuntu/project-0.0.1-SNAPSHOT.jar
-
             echo "Killing existing Spring Boot process if running..."
             screen -S spring-server -X quit || true
 
