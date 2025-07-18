@@ -1,9 +1,15 @@
 package com.project.project.controller;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -121,16 +127,26 @@ public class UserController {
 	    return ResponseEntity.ok(Map.of("message", "비밀번호가 성공적으로 변경되었습니다."));
 	}
 	
-	@PostMapping("/sendResume")
+	@PostMapping("/send-resume")
 	public ResponseEntity<String> sendResume(@RequestBody Map<String, String> request) {
 		String email = request.get("email");
 	    try {
-	        File resume = new File("C:\\Users\\admin\\Desktop\\Project1\\BackEnd\\project\\src\\main\\resources\\resume\\resume.pdf");
-	        emailService.sendResumeEmail(email, resume);
+	    	Resource resource = new ClassPathResource("resume/resume.pdf");
+	    	
+	    	InputStream inputStream = resource.getInputStream();
+	        File tempFile = Files.createTempFile("resume", ".pdf").toFile();
+	        try (FileOutputStream out = new FileOutputStream(tempFile)) {
+	            inputStream.transferTo(out);
+	        }
+	    	
+	        emailService.sendResumeEmail(email, tempFile);
 	        return ResponseEntity.ok("이력서 메일 발송 완료");
 	    } catch (MessagingException e) {
 	        e.printStackTrace();
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("메일 발송 실패");
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이력서 파일 로드 실패");
 	    }
 	}
 	
