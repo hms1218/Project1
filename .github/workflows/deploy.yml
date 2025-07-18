@@ -34,6 +34,7 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           source: "BackEnd/project/build/libs/project-0.0.1-SNAPSHOT.jar"
           target: "/home/ubuntu/"
+          overwrite: true
 
       - name: Execute SSH Commands on EC2
         uses: appleboy/ssh-action@v1.0.0
