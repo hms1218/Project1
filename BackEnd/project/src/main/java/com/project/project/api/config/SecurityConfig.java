@@ -34,7 +34,7 @@ public class SecurityConfig {
                 		"/users/find-pw",
                 		"/users/validate-reset-token",
                 		"/users/reset-password",
-                		"/users/sendResume",
+                		"/users/send-resume",
                 		// 게시판
                 		"/posts",
                 		"/posts/**",

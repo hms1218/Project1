@@ -29,7 +29,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
         "/users/find-pw",
         "/users/validate-reset-token",
         "/users/reset-password",
-        "/users/sendResume",
+        "/users/send-resume",
         "/posts",
         "/comments"
     );
