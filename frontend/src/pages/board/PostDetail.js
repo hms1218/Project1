@@ -48,7 +48,6 @@ const PostDetail = () => {
                 }
                 
                 const res = await getPostById(id);
-                console.log("응답:", res)
                 setPost(res);
                 setLikes(res.likes);
                 if(userId){
@@ -106,6 +105,7 @@ const PostDetail = () => {
     const handleDelete = async () => {
         if(window.confirm("삭제하시겠습니까?")){
             try {
+                console.log("삭제 요청 userId:", userId);
                 await deletePost(id, userId);
                 alert("삭제되었습니다.")
                 navigate("/board")

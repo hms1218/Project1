@@ -36,7 +36,7 @@ const Header = () => {
                         <div className="desktop-menu">
                             <Link to="/mypage">마이페이지</Link>
                             <button onClick={handleLogout}>로그아웃</button>
-                            <span>{userId}</span>
+                            <span style={{color: userId === "rhkwmq93" && 'red'}}>{userId === "rhkwmq93" ? "관리자계정" : userId}</span>
                         </div>
 
                         <button className="hamburger-btn" onClick={toggleMenu}>

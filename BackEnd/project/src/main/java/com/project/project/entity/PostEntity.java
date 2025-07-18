@@ -2,6 +2,8 @@ package com.project.project.entity;
 
 import java.time.LocalDateTime;
 
+import org.springframework.data.annotation.LastModifiedDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -45,6 +47,8 @@ public class PostEntity {
 	private int likes;
 	
 	private LocalDateTime createdAt;
+	
+	@LastModifiedDate
 	private LocalDateTime updatedAt;
 	
 	@PrePersist
@@ -54,8 +58,8 @@ public class PostEntity {
         this.likes = 0;
     }
 	
-	@PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
+//	@PreUpdate
+//    protected void onUpdate() {
+//        this.updatedAt = LocalDateTime.now();
+//    }
 }

@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://13.124.166.21:8081"; // 포트와 주소를 맞게 설정
+const API_BASE_URL = "http://13.124.166.21:8081";
+// const API_BASE_URL = "http://localhost:8081";
 
 // 게시글 전체 조회
 export const getAllPosts = async () => {

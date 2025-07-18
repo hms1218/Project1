@@ -1,12 +1,11 @@
 package com.project.project.service;
 
-import java.security.Key;
-import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.project.project.api.token.JwtTokenProvider;
 import com.project.project.dto.UserResponseDTO;
@@ -15,8 +14,6 @@ import com.project.project.dto.UserSignUpDTO;
 import com.project.project.entity.UserEntity;
 import com.project.project.repository.UserRepository;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -106,6 +103,7 @@ public class UserService {
 	}
 	
 	//비밀번호 변경 api
+	@Transactional
 	public void updatePassword(String userId, String newPassword) {
 	    Optional<UserEntity> userOpt = userRepository.findByUserId(userId);
 	    if (userOpt.isEmpty()) {

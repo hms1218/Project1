@@ -3,7 +3,6 @@ import "../pages/board/Board.css"
 
 //게시글 리스트
 const PostList = ({posts, currentPage, postsPerPage, totalPosts}) => {
-    console.log("totalPosts:", totalPosts);
     return(
         <table className="post-table">
             <thead>

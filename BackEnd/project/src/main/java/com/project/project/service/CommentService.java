@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.project.project.dto.CommentDTO;
 import com.project.project.entity.CommentEntity;
@@ -23,6 +24,7 @@ public class CommentService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     
+    @Transactional(readOnly = true)
     public List<CommentDTO> getCommentsByPostId(Long postId) {
         return commentRepository.findByPost_PostIdOrderByCreatedAtAsc(postId)
                 .stream()
@@ -30,6 +32,7 @@ public class CommentService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public Long addComment(Long postId, String content, String userId) {
         PostEntity post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
         UserEntity user = userRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
@@ -43,6 +46,7 @@ public class CommentService {
         return commentRepository.save(comment).getCommentId();
     }
     
+    @Transactional
     public CommentDTO updateComment(Long commentId, String content, String userId) {
         CommentEntity comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new RuntimeException("댓글을 찾을 수 없습니다."));
@@ -58,6 +62,7 @@ public class CommentService {
         return CommentDTO.fromEntity(updated);
     }
 
+    @Transactional
     public void deleteComment(Long commentId, String userId) {
         CommentEntity comment = commentRepository.findById(commentId).orElseThrow(() -> new RuntimeException("댓글을 찾을 수 없습니다."));
         if (!comment.getUser().getUserId().equals(userId)) {

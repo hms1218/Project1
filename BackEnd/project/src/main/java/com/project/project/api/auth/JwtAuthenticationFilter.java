@@ -31,7 +31,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
         "/users/reset-password",
         "/users/send-resume",
         "/posts",
-        "/comments"
+        "/comments",
+        "/files/upload",
+        "/files"
     );
 	
 	public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {
