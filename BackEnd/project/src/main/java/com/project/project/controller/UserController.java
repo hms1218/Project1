@@ -127,6 +127,7 @@ public class UserController {
 	    return ResponseEntity.ok(Map.of("message", "비밀번호가 성공적으로 변경되었습니다."));
 	}
 	
+	//이력서 전송
 	@PostMapping("/send-resume")
 	public ResponseEntity<String> sendResume(@RequestBody Map<String, String> request) {
 		String email = request.get("email");

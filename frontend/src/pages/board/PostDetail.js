@@ -5,6 +5,10 @@ import "./Detail.css"
 import { getPostById, likesPost, deletePost, checkIfLiked, increaseViewCount } from "../../api/PostApi";
 import { getCommentsByPostId, addComment, updateComment, deleteComment } from "../../api/CommentApi";
 import { FormatDate } from "../../utils/FormatDate";
+import { getFilesById } from "../../api/FileApi";
+
+// const API_BASE_URL = "http://13.124.166.21:8081";
+const API_BASE_URL = "http://localhost:8081";
 
 // 게시글 상세페이지
 const PostDetail = () => {
@@ -26,6 +30,8 @@ const PostDetail = () => {
     const [likes, setLikes] = useState(0);
     const [isLiked, setIsLiked] = useState(false);
 
+    const [files, setFiles] = useState([]);
+
     useEffect(() => {
         const getPost = async () => {
             try {
@@ -38,18 +44,16 @@ const PostDetail = () => {
 
                 const idStr = String(id);
                     if (!(idStr in viewedPosts)) {
-                    console.log("조회수 증가 API 호출");
-                await increaseViewCount(id);
-                    viewedPosts[idStr] = Date.now(); // 또는 다른 값
+                    await increaseViewCount(id);
+
+                    viewedPosts[idStr] = Date.now();
                     localStorage.setItem("viewedPosts", JSON.stringify(viewedPosts));
-                    console.log("로컬스토리지에 id 저장 후 상태:", viewedPosts);
-                } else {
-                    console.log("이미 조회한 게시글입니다:", idStr);
                 }
                 
                 const res = await getPostById(id);
                 setPost(res);
                 setLikes(res.likes);
+                
                 if(userId){
                     const liked = await checkIfLiked(id,userId);
                     setIsLiked(liked)
@@ -57,7 +61,11 @@ const PostDetail = () => {
 
                 const getComments = await getCommentsByPostId(id);
                 setComment(getComments);
-                console.log("댓글:",getComments)
+
+                const fileList = await getFilesById(id);
+                setFiles(fileList);
+
+                console.log("fileList:", fileList)
 
                 setLoading(false);
             } catch (error) {
@@ -76,6 +84,11 @@ const PostDetail = () => {
         e.preventDefault();
 
         if(newComment.trim() === '') return;
+
+        if(userId === null) {
+            alert("로그인 후 이용하세요.")
+            return;
+        }
 
         if(!window.confirm("댓글을 등록하시겠습니까?")) return;
         try {
@@ -192,6 +205,27 @@ const PostDetail = () => {
                 <button onClick={() => navigate("/board")}>목록으로</button>
             </div>
             <hr/>
+
+            <div className="file-list">
+                <h3>첨부파일</h3>
+                {files.length === 0 && <p>첨부파일이 없습니다.</p>}
+                <ul>
+                    {files.map(file => {
+                        const fileNameOnly = file.filePath.split('\\').pop();
+                        const fileUrl = `${API_BASE_URL}/uploads/${fileNameOnly}`;
+                        console.log("이건?",file)
+                        console.log("detail:",fileNameOnly)
+
+                        return(
+                            <li key={file.fileId}>
+                                <a href={fileUrl} target="_blank" rel="noopener noreferrer">
+                                    {file.fileName}
+                                </a>
+                            </li>
+                        )
+                    })}
+                </ul>
+            </div>
             
             <p className="detail-comment">댓글({comment.length})</p>
             <ul className="comment-list">

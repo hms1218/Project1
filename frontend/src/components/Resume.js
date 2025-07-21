@@ -1,16 +1,31 @@
 import { sendResume } from "../api/UserApi";
 import { useState } from "react";
 import "../pages/sign/Form.css"
+import { useAuth } from "../context/AuthContext";
 
 const Resume = () => {
+    const { userId } = useAuth();
+
     const [email, setEmail] = useState("");
     const [loading, setLoading] = useState(false);
 
     const handleSendResume = async () => {
+        if(userId === null){
+            alert("로그인 후 이용해주세요.");
+            return;
+        }
+
         if (!email.trim()) {
             alert("이메일을 입력해주세요.");
             return;
         }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email.trim())) {
+            alert("유효한 이메일 주소를 입력해주세요.");
+            return;
+        }
+
         const confirmed = window.confirm(`${email} 으로 이력서를 전송하시겠습니까?`);
         if (!confirmed) return;
 
@@ -38,8 +53,8 @@ const Resume = () => {
                 style={{ padding: "8px", width: "75%" }}
             />
             <button
+                className="resume-button"
                 onClick={handleSendResume}
-                style={{ padding: "6px", marginLeft: "5px" }}
             >
                 {loading ? "발송중" : "발송"}
             </button>

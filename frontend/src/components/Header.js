@@ -44,6 +44,7 @@ const Header = () => {
                         </button>
                         {menuOpen && (
                         <div className="mobile-menu">
+                            <span style={{color: userId === "rhkwmq93" && 'red'}}>{userId === "rhkwmq93" ? "관리자계정" : userId}</span>
                             <Link to="/mypage">마이페이지</Link>
                             <button onClick={handleLogout}>로그아웃</button>
                         </div>

@@ -5,6 +5,7 @@ import MyEditor from "./MyEditor";
 import FileUpload from "../../components/FileUpload";
 import { useAuth } from "../../context/AuthContext";
 import { getPostById, updatePost } from "../../api/PostApi";
+import { getFilesById, uploadFiles } from "../../api/FileApi";
 
 const PostEdit = () => {
     const {id} = useParams();
@@ -21,7 +22,9 @@ const PostEdit = () => {
                 const post = await getPostById(id);
                 setTitle(post.title);
                 setContent(post.content);
-                //파일 연동
+                
+                const fileList = await getFilesById(id);
+                setFiles(fileList);
             } catch (error) {
                 console.error(error);
                 alert("게시글 정보를 불러오는 데 실패했습니다.");
@@ -51,6 +54,11 @@ const PostEdit = () => {
             const updatedPost = { title, content };
             await updatePost(id, updatedPost, userId);
 
+            const newFiles = files.filter(file => file.id === null);
+                if (newFiles.length > 0) {
+                    await uploadFiles(newFiles, id);
+                }
+
             alert("게시글이 수정되었습니다.");
             navigate(`/post/${id}`);
         } catch (error) {
@@ -78,7 +86,7 @@ const PostEdit = () => {
                 />
                 <MyEditor className="editor" content={content} setContent={setContent} />
 
-                <FileUpload files={files} setFiles={setFiles} />
+                <FileUpload className="file-upload-container" files={files} setFiles={setFiles} />
 
                 <div className="edit-buttons">
                     <button type="submit">수정</button>

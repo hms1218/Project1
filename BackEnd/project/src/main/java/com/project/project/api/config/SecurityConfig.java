@@ -40,8 +40,9 @@ public class SecurityConfig {
                 		"/posts/**",
                 		//댓글
                 		"/comments/**",
-                		"files/upload",
-                		"files/**"
+                		"/files/upload",
+                		"/files/**",
+                		"/uploads/**"
                 		).permitAll() // 회원가입, 로그인은 인증없이 허용
                 .anyRequest().authenticated()  // 그 외 요청은 인증 필요
             .and()

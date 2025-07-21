@@ -1,12 +1,13 @@
 import "./FileUpload.css"
-import { uploadFiles, deleteFile } from "../api/FileApi";
+import { deleteFile } from "../api/FileApi";
 import { useState } from "react";
+
+// const API_BASE_URL = "http://13.124.166.21:8081";
+const API_BASE_URL = "http://localhost:8081";
 
 const FileUpload = ({files, setFiles}) => {
 
     const [uploading, setUploading] = useState(false);
-
-    console.log("file", files)
 
     const handleFileChange = async (e) => {
         const selectedFiles = Array.from(e.target.files);
@@ -16,14 +17,14 @@ const FileUpload = ({files, setFiles}) => {
         setUploading(true);
 
         try {
-            const uploaded = await uploadFiles(selectedFiles);
+            // const uploaded = await uploadFiles(selectedFiles);
 
-            const uploadedFiles = uploaded.map((url, index) => ({
+            const newFiles = selectedFiles.map((url, index) => ({
                 id: null,
                 name: selectedFiles[index].name,
                 url
             }));
-            setFiles(prev => [...prev, ...uploadedFiles]);
+            setFiles(prev => [...prev, ...newFiles]);
         } catch (error) {
             alert("파일 업로드 실패");
         } finally {
@@ -73,13 +74,27 @@ const FileUpload = ({files, setFiles}) => {
                 <button type="button" onClick={handleRemoveAllFiles} className="remove-all-button">모두 삭제</button>
             )}
             <div className="file-preview">
+                <h3>첨부파일</h3>
                 {files.length > 0 ? (
-                files.map((file,index) => (
-                    <div key={index} className="file-item">
-                        <span>{file.name}</span>
-                        <button type="button" onClick={() => handleRemoveFile(index)}>삭제</button>
-                    </div>
-                ))
+                <ul>
+                    {files.map(file => {
+                        const fileNameOnly = file.fileName || file.name;
+                        const fileUrl = file.url
+                        ? URL.createObjectURL(file.url)
+                        : `${API_BASE_URL}/uploads/${file.filePath?.split('\\').pop()}`;
+
+                        return (
+                            <li key={file.fileId}>
+                                <a href={fileUrl} target="_blank" rel="noopener noreferrer">
+                                    {fileNameOnly}
+                                </a>
+                                <button type="button" onClick={() => handleRemoveFile(files.indexOf(file))}>
+                                    삭제
+                                </button>
+                            </li>
+                        );
+                    })}
+                </ul>
                 ) : (
                     <p className="no-files-message">첨부된 파일이 없습니다.</p>
                 )

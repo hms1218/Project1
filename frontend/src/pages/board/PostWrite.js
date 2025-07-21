@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Write.css"
 import MyEditor from "./MyEditor";
 import FileUpload from "../../components/FileUpload";
 import { createPost } from "../../api/PostApi";
 import { useAuth } from "../../context/AuthContext";
+import { uploadFiles } from "../../api/FileApi";
 
 const PostWrite = () => {
 
@@ -14,6 +15,18 @@ const PostWrite = () => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [files, setFiles] = useState([]);
+
+    useEffect(() => {
+        if(userId === null){
+            console.log("userId:", userId)
+            alert("로그인 후 이용하세요.")
+            navigate("/signin")
+        }
+    },[userId, navigate])
+
+    if (userId === null) {
+        return null; 
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -35,7 +48,11 @@ const PostWrite = () => {
 
         try {
             const user_id = userId;
-            await createPost(newPost, user_id);
+            const createdPostId = await createPost(newPost, user_id);
+
+            if (files.length > 0) {
+                await uploadFiles(files, createdPostId);
+            }
 
             alert("게시글이 작성되었습니다.");
             navigate("/board");

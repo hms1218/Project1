@@ -28,7 +28,7 @@
     text-align: right;
 }
 
-.write-form button {
+.write-button-group button {
     width: auto;
     padding: 8px;
     background-color: #fff;

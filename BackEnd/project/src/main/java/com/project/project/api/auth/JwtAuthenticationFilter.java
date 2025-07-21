@@ -33,7 +33,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
         "/posts",
         "/comments",
         "/files/upload",
-        "/files"
+        "/files",
+        "/uploads"
     );
 	
 	public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {

@@ -3,7 +3,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 12px 24px;
-    background-color: #f9f9f9;
+    background-color: #fff;
     border-bottom: 1px solid #ddd;
 }
 
@@ -22,12 +22,13 @@
 }
 
 .nav-center {
-    flex: 1;
+    /* flex: 1; */
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 25px;
     gap: 12px;
+    flex-wrap: nowrap;
 }
 
 .nav-right {
@@ -49,6 +50,7 @@
     cursor: pointer;
     font-size: 25px;
     font-family: inherit;
+    white-space: nowrap;
 }
 
 .nav-right a,
@@ -97,41 +99,47 @@
 
 /* 모바일 대응 */
 @media (max-width: 768px) {
+    .header {
+        padding: 8px 16px;
+    }
+
     .logo-container h1 {
         font-size: 28px;
     }
 
+    .nav-center {
+        justify-content: center;
+        gap: 8px;
+    }
+
     .nav-center a {
         font-size: 18px;
+        padding: 4px 6px;
     }
 
     .nav-right a,
     .nav-right button {
-        font-size: 14px;
+        font-size: 12px;
     }
 }
 
 /* 햄버거 버튼 활성화 / 비활성화 */
-@media (max-width: 790px) {
-    .desktop-menu span {
-        display: inline;
-    }
-
-    .desktop-menu a,
+@media (max-width: 768px) {
     .desktop-menu button {
         display: none;
     }
 
     .hamburger-btn {
         display: inline-block;
-        font-size: 24px;
+        /* font-size: 24px;
         background: none;
-        border: none;
+        border: none; */
         cursor: pointer;
     }
 
     .mobile-menu {
         position: absolute;
+        flex-direction: column;
         right: 24px;
         top: 60px;
         background: white;
@@ -141,6 +149,14 @@
         flex-direction: column;
         gap: 10px;
         padding: 10px;
+    }
+}
+
+@media (max-width: 550px) {
+    .nav-center {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
     }
 }
 

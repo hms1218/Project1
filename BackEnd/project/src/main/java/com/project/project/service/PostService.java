@@ -29,6 +29,7 @@ public class PostService {
     private final UserRepository userRepository;
     private final PostLikesRepository postLikesRepository;
     private final CommentRepository commentRepository;
+    private final FileService fileService;
     
     //전체 게시글 조회
     @Transactional(readOnly = true)
@@ -91,6 +92,8 @@ public class PostService {
         commentRepository.deleteAllByPost(post);
         
         postLikesRepository.deleteAllByPost(post);
+        
+        fileService.deleteFilesByPostId(id);
         
         postRepository.delete(post);
     }
