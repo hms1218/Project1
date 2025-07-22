@@ -1,5 +1,5 @@
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
 
 const MyEditor = ({content, setContent, className}) => {
 
@@ -21,7 +21,6 @@ const MyEditor = ({content, setContent, className}) => {
         "strike",
         "blockquote",
         "list",
-        "bullet",
         "link",
         "image",
     ];
@@ -35,7 +34,6 @@ const MyEditor = ({content, setContent, className}) => {
             modules={modules}
             formats={formats}
             placeholder="내용을 입력해주세요."
-            style={{ height: "300px", marginBottom: "2rem" }}
         />
     );
 }

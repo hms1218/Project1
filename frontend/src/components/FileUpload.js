@@ -86,7 +86,7 @@ const FileUpload = ({files, setFiles}) => {
                         return (
                             <li key={file.fileId}>
                                 <a href={fileUrl} target="_blank" rel="noopener noreferrer">
-                                    {fileNameOnly}
+                                    📎{fileNameOnly}
                                 </a>
                                 <button type="button" onClick={() => handleRemoveFile(files.indexOf(file))}>
                                     삭제

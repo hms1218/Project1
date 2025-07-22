@@ -12,9 +12,15 @@
 }
 
 .detail-content {
-    margin: 20px 0;
+    min-height: 400px;
+}
+
+.detail-content img{
+    margin: 0 auto;
     font-size: 16px;
-    height: 30vh;
+    height: auto;
+    display: block;
+    max-width: 100%;
 }
 
 .detail-button {
@@ -100,7 +106,7 @@
 
 .comment-list {
     list-style: none;
-    border-top: 1px solid #ddd;
+    /* border-top: 1px solid #ddd; */
     padding: 0;
     margin: 16px 0;
 }

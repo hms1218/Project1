@@ -39,7 +39,7 @@ public class PostEntity {
 	@Column(nullable = false, length = 200)
 	private String title;
 	
-	@Column(columnDefinition = "TEXT", nullable = false)
+	@Column(columnDefinition = "LONGTEXT", nullable = false)
 	private String content;
 	
 	private int view;

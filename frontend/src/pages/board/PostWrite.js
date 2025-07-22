@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Write.css"
 import MyEditor from "./MyEditor";
@@ -16,18 +16,6 @@ const PostWrite = () => {
     const [content, setContent] = useState('');
     const [files, setFiles] = useState([]);
 
-    useEffect(() => {
-        if(userId === null){
-            console.log("userId:", userId)
-            alert("로그인 후 이용하세요.")
-            navigate("/signin")
-        }
-    },[userId, navigate])
-
-    if (userId === null) {
-        return null; 
-    }
-
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -41,6 +29,8 @@ const PostWrite = () => {
             return;
         }
 
+        console.log("content length:", content.length); 
+
         const newPost = {title, content};
 
         const confirmed = window.confirm("작성하시겠습니까?")
@@ -48,7 +38,7 @@ const PostWrite = () => {
 
         try {
             const user_id = userId;
-            const createdPostId = await createPost(newPost, user_id);
+            const createdPostId = await createPost(newPost, user_id, files);
 
             if (files.length > 0) {
                 await uploadFiles(files, createdPostId);

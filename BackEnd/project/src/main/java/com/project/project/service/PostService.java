@@ -18,7 +18,6 @@ import com.project.project.repository.PostLikesRepository;
 import com.project.project.repository.PostRepository;
 import com.project.project.repository.UserRepository;
 
-
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -57,10 +56,11 @@ public class PostService {
         return PostDTO.fromEntity(post);
     }
 
-    //게시글 등록
+  //게시글 등록
     @Transactional
     public Long createPost(PostDTO dto, String userId) {
-        UserEntity user = userRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        UserEntity user = userRepository.findByUserId(userId)
+        		.orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
         PostEntity post = dto.toEntity(user);
         return postRepository.save(post).getPostId();
     }

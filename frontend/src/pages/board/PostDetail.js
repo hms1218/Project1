@@ -213,13 +213,11 @@ const PostDetail = () => {
                     {files.map(file => {
                         const fileNameOnly = file.filePath.split('\\').pop();
                         const fileUrl = `${API_BASE_URL}/uploads/${fileNameOnly}`;
-                        console.log("이건?",file)
-                        console.log("detail:",fileNameOnly)
 
                         return(
                             <li key={file.fileId}>
                                 <a href={fileUrl} target="_blank" rel="noopener noreferrer">
-                                    {file.fileName}
+                                    📎{file.fileName}
                                 </a>
                             </li>
                         )

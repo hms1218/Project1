@@ -50,6 +50,24 @@
     background-color: #aaa;
 }
 
+.editor {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    height: 400px;
+}
+
+.editor .ql-toolbar {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+.editor .ql-container {
+    height: 360px; /* 300px - toolbar 높이(약 40px) */
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
 /* 모바일 대응 */
 @media (max-width: 768px) {
     .edit-container {

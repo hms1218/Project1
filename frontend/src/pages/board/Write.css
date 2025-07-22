@@ -44,6 +44,24 @@
     background-color: #ddd;
 }
 
+.editor {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    height: 400px;
+}
+
+.editor .ql-toolbar {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+.editor .ql-container {
+    height: 360px; /* 300px - toolbar 높이(약 40px) */
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
 /* 모바일 대응 */
 @media (max-width: 768px) {
     .write-container {
@@ -61,14 +79,6 @@
         font-size: 14px;
         padding: 6px 12px;
         margin-left: 2px;
-    }
-}
-
-@media (max-width: 550px) {
-    .editor {
-        width: 90vw;
-        max-width: 500px;
-        box-sizing: border-box;
     }
 }
 
@@ -93,5 +103,27 @@
         font-size: 13px;         
         padding: 5px 10px;       
         margin-left: 2px;
+    }
+
+    .editor {
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto;
+        height: 200px;
+    }
+
+    .editor .ql-toolbar {
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px;
+    }
+
+    .editor .ql-container {
+        min-height: 158px; /* 300px - toolbar 높이(약 40px) */
+        border-bottom-left-radius: 6px;
+        border-bottom-right-radius: 6px;
+    }
+
+    .file-upload-container {
+        margin-top: 20px;
     }
 }

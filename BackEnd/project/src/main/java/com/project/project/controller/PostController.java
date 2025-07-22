@@ -2,6 +2,7 @@ package com.project.project.controller;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,10 +11,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.project.project.dto.PostDTO;
-import com.project.project.dto.PostLikesDTO;
+import com.project.project.service.FileService;
 import com.project.project.service.PostService;
 
 import lombok.RequiredArgsConstructor;
@@ -24,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class PostController {
 	
 	private final PostService postService;
+	private final FileService fileService;
 	
 	//전체 게시글 조회
 	@GetMapping

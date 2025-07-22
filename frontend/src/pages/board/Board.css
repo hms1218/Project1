@@ -136,10 +136,21 @@ tbody tr:hover {
         padding: 8px 6px;
     }
 
+    .post-table th:nth-child(1),
+    .post-table td:nth-child(1) {
+        width: 30px;
+    }
+
+    .post-table th:nth-child(2),
+    .post-table td:nth-child(2) {
+        width: auto;
+    }
     .post-table th:nth-child(3),
     .post-table td:nth-child(3),
     .post-table th:nth-child(4),
-    .post-table td:nth-child(4),
+    .post-table td:nth-child(4) {
+        width: 50px;
+    }
     .post-table th:nth-child(5),
     .post-table td:nth-child(5) {
         width: 80px;

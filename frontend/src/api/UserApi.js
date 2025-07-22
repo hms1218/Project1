@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// const API_BASE_URL = "http://13.124.166.21:8081";
-const API_BASE_URL = "http://localhost:8081";
+const API_BASE_URL = "http://13.124.166.21:8081";
+// const API_BASE_URL = "http://localhost:8081";
 
 //회원가입 api
 export const signUpApi = async (data) => {

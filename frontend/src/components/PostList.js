@@ -15,7 +15,14 @@ const PostList = ({posts, currentPage, postsPerPage, totalPosts}) => {
                 </tr>
             </thead>
             <tbody>
-                {posts.map((post, index) => {
+                {posts.length === 0 ? (
+                    <tr>
+                        <td colSpan='5'>
+                            게시글이 없습니다.
+                        </td>
+                    </tr>
+                ) : 
+                posts.map((post, index) => {
                     const number = totalPosts - ((currentPage - 1) * postsPerPage + index);
                     return <PostItem key={post.postId} post={post} number={number}/>;
                 })}

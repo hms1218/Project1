@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// const API_BASE_URL = "http://13.124.166.21:8081";
-const API_BASE_URL = "http://localhost:8081";
+const API_BASE_URL = "http://13.124.166.21:8081";
+// const API_BASE_URL = "http://localhost:8081";
 
 // 게시글 전체 조회
 export const getAllPosts = async () => {
@@ -34,24 +34,46 @@ export const createPost = async (postData, userId) => {
 
 // 게시글 수정
 export const updatePost = async (id, postData, userId) => {
-    const response = await axios.put(`${API_BASE_URL}/posts/${id}`, postData, {params: { userId }});
+    const token = localStorage.getItem("token");
+    const response = await axios.put(`${API_BASE_URL}/posts/${id}`, 
+        postData, 
+        {
+            params: { userId },
+            headers: { Authorization: `Bearer ${token}` }
+        });
     return response.data;
 };
 
 // 게시글 삭제
 export const deletePost = async (id, userId) => {
-    const response = await axios.delete(`${API_BASE_URL}/posts/${id}`, {params: { userId }});
+    const token = localStorage.getItem("token");
+    const response = await axios.delete(`${API_BASE_URL}/posts/${id}`, 
+        {
+            params: { userId },
+            headers: { Authorization: `Bearer ${token}` }
+        });
     return response.data;
 };
 
 // 게시글 좋아요
 export const likesPost = async (id, userId) => {
-    const response = await axios.post(`${API_BASE_URL}/posts/${id}/likes`, null, {params: {userId}});
+    const token = localStorage.getItem("token");
+    const response = await axios.post(`${API_BASE_URL}/posts/${id}/likes`, 
+        null, 
+        {
+            params: {userId},
+            headers: { Authorization: `Bearer ${token}` }
+        });
     return response.data;
 };
 
 // 게시글 좋아요 여부 조회
 export const checkIfLiked = async (id, userId) => {
-    const response = await axios.get(`${API_BASE_URL}/posts/${id}/liked`, {params: { userId }});
+    const token = localStorage.getItem("token");
+    const response = await axios.get(`${API_BASE_URL}/posts/${id}/liked`, 
+        {
+            params: { userId },
+            headers: { Authorization: `Bearer ${token}` }
+        });
     return response.data;  // true or false
 };

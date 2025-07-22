@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom";
 import "./Board.css"
 import { useEffect, useState } from "react";
 import { getAllPosts } from "../../api/PostApi";
+import { useAuth } from "../../context/AuthContext";
 
 const Board = () => {
 
     const navigate = useNavigate();
+    const { userId } = useAuth();
 
     const [posts, setPosts] = useState([]);
 
@@ -64,7 +66,13 @@ const Board = () => {
         <div className="board-container">
             <h2>게시판</h2>
             <div className="post-write">
-                <button onClick={() => navigate("/write")}>글쓰기</button>
+                <button onClick={() => {
+                    if(userId === null){
+                        alert("로그인 후 이용해주세요.")
+                        return;
+                    }
+                    navigate("/write")}
+                    }>글쓰기</button>
             </div>
             <PostList posts={currentPosts} currentPage={currentPage} postsPerPage={postsPerPage} totalPosts={posts.length}/>
 

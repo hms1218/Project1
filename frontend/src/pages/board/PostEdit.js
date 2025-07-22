@@ -47,6 +47,8 @@ const PostEdit = () => {
             return;
         }
 
+        console.log("content length:", content.length); 
+
         const confirmed = window.confirm("수정하시겠습니까?");
         if(!confirmed) return;
         
