@@ -14,7 +14,9 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter{
 
 	private final JwtTokenProvider jwtTokenProvider;
@@ -46,7 +48,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 									HttpServletResponse response, 
 									FilterChain filterChain)
 									throws ServletException, IOException {
-		System.out.println("JwtAuthenticationFilter is running");
+		log.debug("JwtAuthenticationFilter is running");
 
         String path = request.getServletPath();
         

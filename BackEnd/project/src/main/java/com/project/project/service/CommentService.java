@@ -1,11 +1,11 @@
 package com.project.project.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.project.project.api.exception.UnauthorizedCommentAccessException;
 import com.project.project.dto.CommentDTO;
 import com.project.project.entity.CommentEntity;
 import com.project.project.entity.PostEntity;
@@ -29,7 +29,7 @@ public class CommentService {
         return commentRepository.findByPost_PostIdOrderByCreatedAtAsc(postId)
                 .stream()
                 .map(CommentDTO::fromEntity)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Transactional
@@ -52,7 +52,7 @@ public class CommentService {
                 .orElseThrow(() -> new RuntimeException("댓글을 찾을 수 없습니다."));
 
         if (!comment.getUser().getUserId().equals(userId)) {
-            throw new RuntimeException("수정 권한이 없습니다.");
+            throw new UnauthorizedCommentAccessException("수정 권한이 없습니다.");
         }
 
         comment.setContent(content);
@@ -66,7 +66,7 @@ public class CommentService {
     public void deleteComment(Long commentId, String userId) {
         CommentEntity comment = commentRepository.findById(commentId).orElseThrow(() -> new RuntimeException("댓글을 찾을 수 없습니다."));
         if (!comment.getUser().getUserId().equals(userId)) {
-            throw new RuntimeException("삭제 권한이 없습니다.");
+            throw new UnauthorizedCommentAccessException("삭제 권한이 없습니다.");
         }
         commentRepository.delete(comment);
     }

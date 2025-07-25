@@ -42,7 +42,7 @@ public class FileController {
 	
 	//파일 조회
 	@GetMapping("/{postId}")
-	public ResponseEntity<?> getFilesById(@PathVariable("postId") Long postId){
+	public ResponseEntity<List<FileDTO>> getFilesById(@PathVariable("postId") Long postId){
 		List<FileDTO> files = fileService.getFilesById(postId);
 		
 		return ResponseEntity.ok(files);

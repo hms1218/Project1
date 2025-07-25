@@ -2,6 +2,7 @@ package com.project.project.api.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -20,10 +21,9 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-        	.cors()
-        	.and()
-            .csrf().disable()  // API라면 보통 CSRF 비활성화
-            .authorizeHttpRequests()
+        	.cors(Customizer.withDefaults())
+            .csrf(csrf -> csrf.disable())  // API라면 보통 CSRF 비활성화
+            .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                 		"/",
                 		// 로그인 / 회원가입
@@ -44,10 +44,10 @@ public class SecurityConfig {
                 		"/files/**",
                 		"/uploads/**"
                 		).permitAll() // 회원가입, 로그인은 인증없이 허용
-                .anyRequest().authenticated()  // 그 외 요청은 인증 필요
-            .and()
-            .formLogin().disable() // 기본 로그인 폼 비활성화
-            .httpBasic().disable() // 기본 HTTP Basic 인증 사용 가능
+                	.anyRequest().authenticated() // 그 외 요청은 인증 필요
+        		)
+            .formLogin(form -> form.disable()) // 기본 로그인 폼 비활성화
+            .httpBasic(basic -> basic.disable()) // 기본 HTTP Basic 인증 사용 가능
 	        .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), 
 	                UsernamePasswordAuthenticationFilter.class);
 

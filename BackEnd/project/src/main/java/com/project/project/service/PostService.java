@@ -30,13 +30,16 @@ public class PostService {
     private final CommentRepository commentRepository;
     private final FileService fileService;
     
+    private static final String POST_NOT_FOUND_MSG = "게시글을 찾을 수 없습니다";
+    private static final String USER_NOT_FOUND_MSG = "사용자를 찾을 수 없습니다";
+    
     //전체 게시글 조회
     @Transactional(readOnly = true)
     public List<PostDTO> getAllPosts() {
         return postRepository.findAllByOrderByCreatedAtDesc()
                 .stream()
                 .map(PostDTO::fromEntity)
-                .collect(Collectors.toList());
+                .toList();
     }
     
     //조회수 증가
@@ -51,7 +54,7 @@ public class PostService {
     //특정 게시글 조회
     @Transactional(readOnly = true)
     public PostDTO getPost(Long id) {
-        PostEntity post = postRepository.findById(id).orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
+        PostEntity post = postRepository.findById(id).orElseThrow(() -> new RuntimeException(POST_NOT_FOUND_MSG));
 
         return PostDTO.fromEntity(post);
     }
@@ -60,7 +63,7 @@ public class PostService {
     @Transactional
     public Long createPost(PostDTO dto, String userId) {
         UserEntity user = userRepository.findByUserId(userId)
-        		.orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        		.orElseThrow(() -> new RuntimeException(USER_NOT_FOUND_MSG));
         PostEntity post = dto.toEntity(user);
         return postRepository.save(post).getPostId();
     }
@@ -68,7 +71,7 @@ public class PostService {
     //게시글 수정
     @Transactional
     public void updatePost(Long id, PostDTO dto, String userId) {
-        PostEntity post = postRepository.findById(id).orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
+        PostEntity post = postRepository.findById(id).orElseThrow(() -> new RuntimeException(POST_NOT_FOUND_MSG));
         if (!post.getUser().getUserId().equals(userId)) {
             throw new AccessDeniedException("수정 권한이 없습니다.");
         }
@@ -83,7 +86,7 @@ public class PostService {
     @Transactional
     public void deletePost(Long id, String userId) {
         PostEntity post = postRepository.findById(id)
-        		.orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
+        		.orElseThrow(() -> new RuntimeException(POST_NOT_FOUND_MSG));
         
         if (!post.getUser().getUserId().equals(userId) && !userId.equals("rhkwmq93")) {
             throw new AccessDeniedException("삭제 권한이 없습니다.");
@@ -102,9 +105,9 @@ public class PostService {
     @Transactional
     public int toggleLike(Long id, String userId) {
         PostEntity post = postRepository.findById(id)
-        		.orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
+        		.orElseThrow(() -> new RuntimeException(POST_NOT_FOUND_MSG));
         UserEntity user = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new RuntimeException(USER_NOT_FOUND_MSG));
         
         Optional<PostLikesEntity> existingLike = postLikesRepository.findByPostAndUser(post, user);
         
@@ -130,9 +133,9 @@ public class PostService {
     @Transactional(readOnly = true)
     public boolean isPostLikedByUser(Long id, String userId) {
         PostEntity post = postRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
+            .orElseThrow(() -> new RuntimeException(POST_NOT_FOUND_MSG));
         UserEntity user = userRepository.findByUserId(userId)
-            .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+            .orElseThrow(() -> new RuntimeException(USER_NOT_FOUND_MSG));
         return postLikesRepository.findByPostAndUser(post, user).isPresent();
     }
     
