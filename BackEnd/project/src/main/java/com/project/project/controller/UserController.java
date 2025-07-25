@@ -8,6 +8,8 @@ import java.nio.file.Files;
 import java.util.Map;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -29,7 +31,9 @@ import com.project.project.service.UserService;
 
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
@@ -40,6 +44,7 @@ public class UserController {
 	private final JwtTokenProvider jwtTokenProvider;
 	
 	private static final String MESSAGE_KEY = "message";
+	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 	
 	//회원가입
 	@PostMapping("/signup")
@@ -132,11 +137,12 @@ public class UserController {
 	@PostMapping("/send-resume")
 	public ResponseEntity<String> sendResume(@RequestBody Map<String, String> request) {
 		String email = request.get("email");
+		File tempFile = null;
 	    try {
 	    	Resource resource = new ClassPathResource("resume/resume.pdf");
 	    	
 	    	InputStream inputStream = resource.getInputStream();
-	        File tempFile = Files.createTempFile("resume", ".pdf").toFile();
+	        tempFile = Files.createTempFile("resume", ".pdf").toFile();
 	        try (FileOutputStream out = new FileOutputStream(tempFile)) {
 	            inputStream.transferTo(out);
 	        }
@@ -144,11 +150,16 @@ public class UserController {
 	        emailService.sendResumeEmail(email, tempFile);
 	        return ResponseEntity.ok("이력서 메일 발송 완료");
 	    } catch (MessagingException e) {
-	        e.printStackTrace();
+	        logger.error("메일 발송 실패", e);
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("메일 발송 실패");
 	    } catch (IOException e) {
-	        e.printStackTrace();
+	        logger.error("이력서 파일 로드 실패", e);
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이력서 파일 로드 실패");
+	    } finally {
+	    	boolean deleted = tempFile.delete();
+	    	if(!deleted) {
+	    		logger.error("임시 이력서 파일 삭제 실패: {}", tempFile.getAbsolutePath());
+	    	}
 	    }
 	}
 	
