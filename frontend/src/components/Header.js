@@ -2,6 +2,7 @@ import { Link } from "react-router-dom"
 import { useAuth } from "../context/AuthContext";
 import "./Header.css"
 import { useState } from "react";
+import mainLogo from '../assets/Error_MainLogo.png'
 
 // 메인헤더
 const Header = () => {
@@ -24,7 +25,7 @@ const Header = () => {
     return(
         <header className="header">
             <div className="logo-container">
-                <h1><Link to="/">LOGO</Link></h1>
+                <Link to="/"><img src={mainLogo} alt="LOGO" className="main-logo"/></Link>
             </div>
             <div className="nav-center">
                 <Link to="/">홈</Link>

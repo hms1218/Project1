@@ -11,9 +11,9 @@
     flex: 1;
 }
 
-.logo-container h1 {
-    margin: 0;
-    font-size: 40px;
+.logo-container img {
+    width: 100px;
+    height: 80px;
 }
 
 .logo-container a {
