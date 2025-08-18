@@ -1,7 +1,5 @@
 import axios from "axios";
-
-const API_BASE_URL = "http://13.124.166.21:8081";
-// const API_BASE_URL = "http://localhost:8081";
+import { API_BASE_URL } from "./BaseUrl";
 
 //파일 업로드
 export const uploadFiles = async (files, postId) => {

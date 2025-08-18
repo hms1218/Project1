@@ -12,11 +12,11 @@ const API_BASE_URL = "http://localhost:8081";
 
 // 게시글 상세페이지
 const PostDetail = () => {
-    const {id} = useParams();
+    const { id } = useParams();
     const navigate = useNavigate();
     const { userId } = useAuth();
     const ADMIN_ID = "rhkwmq93";
-    
+
     const [post, setPost] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -41,21 +41,24 @@ const PostDetail = () => {
                 } catch (e) {
                     viewedPosts = {};
                 }
+                console.log("viewedPosts: ", viewedPosts)
 
                 const idStr = String(id);
-                    if (!(idStr in viewedPosts)) {
+                const VIEW_LIMIT = 1000 * 60 * 60;
+
+                if (!(idStr in viewedPosts) || (Date.now() - viewedPosts[idStr]) > VIEW_LIMIT) {
                     await increaseViewCount(id);
 
                     viewedPosts[idStr] = Date.now();
                     localStorage.setItem("viewedPosts", JSON.stringify(viewedPosts));
                 }
-                
+
                 const res = await getPostById(id);
                 setPost(res);
                 setLikes(res.likes);
-                
-                if(userId){
-                    const liked = await checkIfLiked(id,userId);
+
+                if (userId) {
+                    const liked = await checkIfLiked(id, userId);
                     setIsLiked(liked)
                 }
 
@@ -74,7 +77,7 @@ const PostDetail = () => {
             }
         }
         getPost();
-    },[id, userId])
+    }, [id, userId])
 
     if (loading) return <p>로딩 중...</p>;
     if (error) return <p>{error}</p>;
@@ -83,14 +86,14 @@ const PostDetail = () => {
     const handleCommentSubmit = async (e) => {
         e.preventDefault();
 
-        if(newComment.trim() === '') return;
+        if (newComment.trim() === '') return;
 
-        if(userId === null) {
+        if (userId === null) {
             alert("로그인 후 이용하세요.")
             return;
         }
 
-        if(!window.confirm("댓글을 등록하시겠습니까?")) return;
+        if (!window.confirm("댓글을 등록하시겠습니까?")) return;
         try {
             await addComment(id, newComment, userId);
             const updatedComments = await getCommentsByPostId(id);
@@ -116,7 +119,7 @@ const PostDetail = () => {
     }
 
     const handleDelete = async () => {
-        if(window.confirm("삭제하시겠습니까?")){
+        if (window.confirm("삭제하시겠습니까?")) {
             try {
                 console.log("삭제 요청 userId:", userId);
                 await deletePost(id, userId);
@@ -126,7 +129,7 @@ const PostDetail = () => {
                 console.error(error);
                 alert("삭제 실패");
             }
-            
+
         }
     }
 
@@ -178,33 +181,33 @@ const PostDetail = () => {
         }
     }
 
-    console.log("등록시간:" , post.createdAt);
-    console.log("수정시간:" , post.updatedAt);
+    console.log("등록시간:", post.createdAt);
+    console.log("수정시간:", post.updatedAt);
 
-    return(
+    return (
         <div className="detail-container">
             <h1>{post.title}</h1>
             <p className="detail-meta">
-                작성자 : {post.author === ADMIN_ID ? "관리자" : post.author} | 
-                작성일 : {FormatDate(post.updatedAt ?? post.createdAt)} {post.updatedAt && <>(수정됨)</>} | 
-                조회수 : {post.view} | 
+                작성자 : {post.author === ADMIN_ID ? "관리자" : post.author} |
+                작성일 : {FormatDate(post.updatedAt ?? post.createdAt)} {post.updatedAt && <>(수정됨)</>} |
+                조회수 : {post.view} |
                 추천수 : {likes}</p>
-            <hr/>
-            <div 
-                className="detail-content" 
-                dangerouslySetInnerHTML={{ __html: post.content }} 
+            <hr />
+            <div
+                className="detail-content"
+                dangerouslySetInnerHTML={{ __html: post.content }}
             />
             <div className="detail-button">
                 {(post && (post.author === userId || userId === ADMIN_ID)) && (
-                <>
-                    <button onClick={() => navigate(`/post/${id}/edit`)}>수정</button>
-                    <button onClick={handleDelete}>삭제</button>
-                </>
+                    <>
+                        <button onClick={() => navigate(`/post/${id}/edit`)}>수정</button>
+                        <button onClick={handleDelete}>삭제</button>
+                    </>
                 )}
                 <button onClick={handleLikes} className={isLiked ? "liked-button" : ""}>👍추천</button>
                 <button onClick={() => navigate("/board")}>목록으로</button>
             </div>
-            <hr/>
+            <hr />
 
             <div className="file-list">
                 <h3>첨부파일</h3>
@@ -214,7 +217,7 @@ const PostDetail = () => {
                         const fileNameOnly = file.filePath.split('\\').pop();
                         const fileUrl = `${API_BASE_URL}/uploads/${fileNameOnly}`;
 
-                        return(
+                        return (
                             <li key={file.fileId}>
                                 <a href={fileUrl} target="_blank" rel="noopener noreferrer">
                                     📎{file.fileName}
@@ -224,52 +227,52 @@ const PostDetail = () => {
                     })}
                 </ul>
             </div>
-            
+
             <p className="detail-comment">댓글({comment.length})</p>
             <ul className="comment-list">
-            {comment.map(comment => (
-                <li key={comment.commentId}>
-                <div className="comment-header">
-                    <strong>{comment.author}</strong>
-                    <div className="comment-actions">
-                    <span className="comment-time">{FormatDate(comment.updatedAt ?? comment.createdAt)} {post.updatedAt && <>(수정됨)</>}</span>
-                    {(comment.author === userId || userId === ADMIN_ID) && editCommentId !== comment.commentId && (
-                        <>
-                        <button onClick={() => startEditing(comment.commentId, comment.content)}>수정</button>
-                        <button onClick={() => handleDeleteComment(comment.commentId)}>삭제</button>
-                        </>
-                    )}
-                    </div>
-                </div>
-                {editCommentId === comment.commentId ? (
-                    <>
-                    <input
-                        className="comment-edit-input"
-                        type="text"
-                        value={editContent}
-                        onChange={(e) => setEditContent(e.target.value)}
-                    />
-                    <div className="comment-edit-buttons">
-                        <button onClick={submitEdit}>저장</button>
-                        <button onClick={cancelEditing} style={{ marginLeft: "10px" }}>취소</button>
-                    </div>
-                    </>
-                ) : (
-                    <p className="comment-content">{comment.content}</p>
-                )}
-                </li>
-            ))}
+                {comment.map(comment => (
+                    <li key={comment.commentId}>
+                        <div className="comment-header">
+                            <strong>{comment.author}</strong>
+                            <div className="comment-actions">
+                                <span className="comment-time">{FormatDate(comment.updatedAt ?? comment.createdAt)} {post.updatedAt && <>(수정됨)</>}</span>
+                                {(comment.author === userId || userId === ADMIN_ID) && editCommentId !== comment.commentId && (
+                                    <>
+                                        <button onClick={() => startEditing(comment.commentId, comment.content)}>수정</button>
+                                        <button onClick={() => handleDeleteComment(comment.commentId)}>삭제</button>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                        {editCommentId === comment.commentId ? (
+                            <>
+                                <input
+                                    className="comment-edit-input"
+                                    type="text"
+                                    value={editContent}
+                                    onChange={(e) => setEditContent(e.target.value)}
+                                />
+                                <div className="comment-edit-buttons">
+                                    <button onClick={submitEdit}>저장</button>
+                                    <button onClick={cancelEditing} style={{ marginLeft: "10px" }}>취소</button>
+                                </div>
+                            </>
+                        ) : (
+                            <p className="comment-content">{comment.content}</p>
+                        )}
+                    </li>
+                ))}
             </ul>
             <form className="comment-form" onSubmit={handleCommentSubmit}>
-                <input 
-                    type="text" 
+                <input
+                    type="text"
                     onChange={(e) => setNewComment(e.target.value)}
                     value={newComment}
                     placeholder="댓글을 입력하세요."
                 />
                 <button type="submit">등록</button>
             </form>
-        </div>    
+        </div>
     )
 }
 
