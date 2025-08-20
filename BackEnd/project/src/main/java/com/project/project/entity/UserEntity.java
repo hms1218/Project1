@@ -36,6 +36,8 @@ public class UserEntity {
 	@Column(nullable = false, unique = true, length = 100)
 	private String email;
 	
+	private String role; // 예: "ROLE_USER"
+	
 	private LocalDateTime createdAt;
 	
 	private LocalDateTime updatedAt;

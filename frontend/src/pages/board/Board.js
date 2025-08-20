@@ -1,5 +1,5 @@
 import PostList from "../../components/PostList";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./Board.css"
 import { useEffect, useState } from "react";
 import { getAllPosts } from "../../api/PostApi";
@@ -8,11 +8,15 @@ import { useAuth } from "../../context/AuthContext";
 const Board = () => {
 
     const navigate = useNavigate();
+    const location = useLocation();
     const { userId } = useAuth();
 
     const [posts, setPosts] = useState([]);
 
-    const [currentPage, setCurrentPage] = useState(1); //현재 페이지
+    const params = new URLSearchParams(location.search);
+    const initialPage = parseInt(params.get("page")) || 1;
+    const [currentPage, setCurrentPage] = useState(initialPage);
+
     const postsPerPage = 10; //한 페이지에 보여줄 게시글 수
     const pagesPerGroup = 5;
 
@@ -44,6 +48,11 @@ const Board = () => {
         }
         getPosts();
     },[])
+
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+        navigate(`/board?page=${pageNumber}`);
+    };
 
     const handlePrevGroup = () => {
         if (currentPage > 1) {
@@ -86,7 +95,7 @@ const Board = () => {
                     return (
                         <button
                             key={pageNumber}
-                            onClick={() => setCurrentPage(pageNumber)}
+                            onClick={() => handlePageChange(pageNumber)}
                             className={currentPage === pageNumber ? "active" : ""}
                         >
                             {pageNumber}

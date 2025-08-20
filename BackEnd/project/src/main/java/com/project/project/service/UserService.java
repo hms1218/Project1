@@ -1,5 +1,6 @@
 package com.project.project.service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -64,7 +65,13 @@ public class UserService {
 			throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
 		}
 		
-		String token = jwtTokenProvider.createToken(user.getUserId());
+		String role = user.getRole();
+		if (role == null) {
+		    role = "USER"; // 기본 역할
+		}
+		List<String> roles = List.of(role);
+		
+		String token = jwtTokenProvider.createToken(user.getUserId(), roles);
 
 	    return Map.of(
 	        "userId", user.getUserId(),
@@ -115,4 +122,11 @@ public class UserService {
 	    user.setPassword(encodedPassword);
 	    userRepository.save(user);
 	}
+	
+	// userId로 사용자 조회
+    public UserResponseDTO getUserByUserId(String userId) {
+        UserEntity userEntity = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        return UserResponseDTO.fromEntity(userEntity);
+    }
 }

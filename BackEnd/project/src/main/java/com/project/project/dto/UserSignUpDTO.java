@@ -22,6 +22,7 @@ public class UserSignUpDTO {
                 .userId(this.userId)
                 .password(encodedPassword)
                 .email(this.email)
+                .role("ROLE_USER") // 기본 역할
                 .build();
     }
 }

@@ -18,11 +18,11 @@ const SignIn = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if(id === ''){
+        if (id === '') {
             setError("아이디를 입력해주세요.")
-        } else if(pw === ''){
+        } else if (pw === '') {
             setError("비밀번호를 입력해주세요.")
-        } else{
+        } else {
             setError('')
         }
 
@@ -42,9 +42,13 @@ const SignIn = () => {
         }
     }
 
-    return(
+    return (
         <div className="container">
             <h2>로그인</h2>
+            <div className="auto_login">
+                <button onClick={() => {setId("rhkwmq93"); setPw("Ostms512!@#");}}>관리자</button>
+                <button onClick={() => {setId("testuser"); setPw("Ostms512!@#")}}>일반사용자</button>
+            </div>
             <form onSubmit={handleSubmit}>
                 <div className="form_group">
                     <label>아이디</label>
@@ -54,7 +58,7 @@ const SignIn = () => {
                         value={id}
                         onChange={(e) => setId(e.target.value)}
                         placeholder="아이디를 입력해주세요."
-                    />                   
+                    />
                 </div>
                 <div className="form_group">
                     <label>비밀번호</label>
@@ -66,7 +70,7 @@ const SignIn = () => {
                         placeholder="비밀번호를 입력해주세요."
                     />
                 </div>
-                { Error && <p style={{ color: "red", fontSize: "14px", textAlign: "left" }}>{Error}</p> }
+                {Error && <p style={{ color: "red", fontSize: "14px", textAlign: "left" }}>{Error}</p>}
                 <button className="form-button" type="submit">로그인</button>
                 <p className="form"><span onClick={() => navigate("/find-id")}>아이디 찾기</span>{' '}|{' '}<span onClick={() => navigate("/find-pw")}>비밀번호 찾기</span></p>
                 <p className="form">회원이 아니신가요?{' '}<span onClick={() => navigate("/signup")}>회원가입으로 이동</span></p>

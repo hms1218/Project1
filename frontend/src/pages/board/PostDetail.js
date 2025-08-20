@@ -1,19 +1,22 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import "./Detail.css"
 import { getPostById, likesPost, deletePost, checkIfLiked, increaseViewCount } from "../../api/PostApi";
 import { getCommentsByPostId, addComment, updateComment, deleteComment } from "../../api/CommentApi";
 import { FormatDate } from "../../utils/FormatDate";
 import { getFilesById } from "../../api/FileApi";
-
-// const API_BASE_URL = "http://13.124.166.21:8081";
-const API_BASE_URL = "http://localhost:8081";
+import { API_BASE_URL } from "../../api/BaseUrl";
 
 // 게시글 상세페이지
 const PostDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const params = new URLSearchParams(location.search);
+    const page = params.get("page") || 1;
+
     const { userId } = useAuth();
     const ADMIN_ID = "rhkwmq93";
 
@@ -167,7 +170,7 @@ const PostDetail = () => {
 
     const handleLikes = async () => {
         if (!userId) {
-            alert("로그인이 필요합니다.");
+            alert("로그인 후 이용하세요.");
             return;
         }
         try {
@@ -205,7 +208,7 @@ const PostDetail = () => {
                     </>
                 )}
                 <button onClick={handleLikes} className={isLiked ? "liked-button" : ""}>👍추천</button>
-                <button onClick={() => navigate("/board")}>목록으로</button>
+                <button onClick={() => navigate(`/board?page=${page}`)}>목록으로</button>
             </div>
             <hr />
 
@@ -235,7 +238,7 @@ const PostDetail = () => {
                         <div className="comment-header">
                             <strong>{comment.author}</strong>
                             <div className="comment-actions">
-                                <span className="comment-time">{FormatDate(comment.updatedAt ?? comment.createdAt)} {post.updatedAt && <>(수정됨)</>}</span>
+                                <span className="comment-time">{FormatDate(comment.updatedAt ?? comment.createdAt)} {comment.updatedAt && <>(수정됨)</>}</span>
                                 {(comment.author === userId || userId === ADMIN_ID) && editCommentId !== comment.commentId && (
                                     <>
                                         <button onClick={() => startEditing(comment.commentId, comment.content)}>수정</button>

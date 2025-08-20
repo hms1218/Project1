@@ -24,7 +24,7 @@ const PostList = ({posts, currentPage, postsPerPage, totalPosts}) => {
                 ) : 
                 posts.map((post, index) => {
                     const number = totalPosts - ((currentPage - 1) * postsPerPage + index);
-                    return <PostItem key={post.postId} post={post} number={number}/>;
+                    return <PostItem key={post.postId} post={post} number={number} currentPage={currentPage}/>;
                 })}
             </tbody>
         </table>

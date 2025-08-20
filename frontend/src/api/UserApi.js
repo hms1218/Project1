@@ -16,6 +16,12 @@ export const signUpApi = async (data) => {
 export const signInApi = async (data) => {
     try {
         const res = await axios.post(`${API_BASE_URL}/users/signin`, data);
+        console.log("login: ",res.data)
+
+        // 토큰과 userId localStorage에 저장
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("userId", res.data.userId);
+
         return res.data;
     } catch (error) {
         console.log("로그인 실패", error);
@@ -94,4 +100,20 @@ export const sendResume = async (email) => {
         console.error("이력서 전송 실패",error)
         throw error; 
     }    
+};
+
+// 내 정보 가져오기
+export const getMyInfo = async () => {
+    try {
+        const token = localStorage.getItem("token"); // JWT 가져오기
+        const res = await axios.get(`${API_BASE_URL}/users/me`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return res.data; // { userNo, userId, email, createdAt }
+    } catch (error) {
+        console.error("내 정보 조회 실패", error);
+        throw error;
+    }
 };
