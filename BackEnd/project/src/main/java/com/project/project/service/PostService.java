@@ -3,7 +3,6 @@ package com.project.project.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -137,6 +136,18 @@ public class PostService {
         UserEntity user = userRepository.findByUserId(userId)
             .orElseThrow(() -> new RuntimeException(USER_NOT_FOUND_MSG));
         return postLikesRepository.findByPostAndUser(post, user).isPresent();
+    }
+    
+    //마이페이지 : 내가 작성한 글 조회
+    @Transactional(readOnly = true)
+    public List<PostDTO> getMyPosts(String userId) {
+    	UserEntity user = userRepository.findByUserId(userId)
+    			.orElseThrow(() -> new RuntimeException(USER_NOT_FOUND_MSG));
+    	
+    	return postRepository.findByUser_UserNo(user.getUserNo())
+    			.stream()
+    			.map(PostDTO::fromEntity)
+    			.toList();
     }
     
 }

@@ -70,5 +70,17 @@ public class CommentService {
         }
         commentRepository.delete(comment);
     }
+    
+    //마이페이지 : 내가 작성한 댓글 조회
+    @Transactional(readOnly = true)
+    public List<CommentDTO> getMyComments(String userId) {
+    	UserEntity user = userRepository.findByUserId(userId)
+    			.orElseThrow(() -> new RuntimeException("댓글을 찾을 수 없습니다."));
+    	
+    	return commentRepository.findByUser_UserNo(user.getUserNo())
+    			.stream()
+    			.map(CommentDTO::fromEntity)
+    			.toList();
+    }
 
 }

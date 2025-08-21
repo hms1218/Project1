@@ -20,6 +20,7 @@ public class CommentDTO {
     private String author;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private Long postId;
     
     // Entity -> DTO 변환
     public static CommentDTO fromEntity(CommentEntity comment) {
@@ -29,6 +30,7 @@ public class CommentDTO {
                 .author(comment.getUser().getUserId())
                 .createdAt(comment.getCreatedAt())
                 .updatedAt(comment.getUpdatedAt())
+                .postId(comment.getPost().getPostId())
                 .build();
     }
 }

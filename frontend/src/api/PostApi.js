@@ -10,6 +10,7 @@ export const getAllPosts = async () => {
 // 게시글 단건 조회
 export const getPostById = async (id) => {
     const response = await axios.get(`${API_BASE_URL}/posts/${id}`);
+    console.log("postRe::",response)
     return response.data;
 };
 
@@ -75,3 +76,13 @@ export const checkIfLiked = async (id, userId) => {
         });
     return response.data;  // true or false
 };
+
+//마이페이지 작성한 글 가져오기
+export const getMyPosts = async () => {
+    const token = localStorage.getItem("token");
+    const res = await axios.get(`${API_BASE_URL}/posts/my`, {
+        headers: {Authorization: `Bearer ${token}`},
+    })
+
+    return res.data;
+}

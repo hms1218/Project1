@@ -4,7 +4,7 @@
     padding: 20px;
     background-color: #f9f9f9;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -48,4 +48,80 @@
 
 .mypage-container button:hover {
     background-color: #45a049;
+}
+
+/* 탭 스타일링 */
+.tab-titles {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 15px;
+}
+
+.tab-titles .tab {
+    cursor: pointer;
+    font-size: 18px;
+    color: #555;
+    padding-bottom: 5px;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.tab-titles .tab:hover {
+    color: #000;
+}
+
+.tab-titles .active-tab {
+    font-weight: bold;
+    color: #45a049;
+    border-bottom: 2px solid #45a049;
+}
+
+/* 게시글 리스트 */
+.my-posts-comments ul {
+    list-style: none;
+    padding: 0;
+}
+
+.my-posts-comments li {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 15px;
+}
+
+/* 글 제목 */
+.post-title {
+    margin: 0 0 5px 0;
+}
+
+/* 글 내용 + 더보기 */
+.post-content-wrapper {
+    display: inline;
+}
+
+.post-content-wrapper p {
+    display: inline;
+    margin: 0;
+    white-space: pre-wrap;
+    /* 줄바꿈 유지 */
+}
+
+/* 더보기 링크 */
+.show-more-link {
+    display: inline; /* p 옆에 바로 붙음 */
+    color: #007bff;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 5px;
+}
+
+.show-more-link:hover {
+    text-decoration: underline;
+}
+
+/* 소제목 및 메타정보 */
+.my-posts-comments small {
+    display: block;
+    margin-top: 5px;
+    color: #777;
+    font-size: 13px;
 }

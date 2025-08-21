@@ -42,3 +42,12 @@ export const deleteComment = async (commentId, userId) => {
         });
     return response.data;
 };
+
+//마이페이지 작성한 댓글 가져오기
+export const getMyComments = async () => {
+    const token = localStorage.getItem("token");
+    const res = await axios.get(`${API_BASE_URL}/comments/my`, {
+        headers: { Authorization: `Bearer ${token}`},
+    })
+    return res.data;
+}

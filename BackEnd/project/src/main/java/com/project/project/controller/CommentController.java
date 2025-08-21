@@ -2,16 +2,19 @@ package com.project.project.controller;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.project.api.token.JwtTokenProvider;
 import com.project.project.dto.CommentDTO;
 import com.project.project.dto.CommentUpdateDTO;
 import com.project.project.service.CommentService;
@@ -24,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class CommentController {
 	
 	private final CommentService commentService;
+	private final JwtTokenProvider jwtTokenProvider;
 	
 	@GetMapping("/{postId}")
     public List<CommentDTO> getComments(@PathVariable("postId") Long postId) {
@@ -47,5 +51,24 @@ public class CommentController {
     @DeleteMapping("/{commentId}")
     public void deleteComment(@PathVariable("commentId") Long commentId, @RequestParam("userId") String userId) {
         commentService.deleteComment(commentId, userId);
+    }
+    
+    //마이페이지 : 내가 작성한 글 조회
+    @GetMapping("/my")
+    public ResponseEntity<List<CommentDTO>> getMyPosts(@RequestHeader("Authorization") String authorizationHeader) {
+    	// "Bearer " 접두어 제거
+    	String token = null;
+    	if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+    		token = authorizationHeader.substring(7);
+    	}
+    	
+    	if(token == null) {
+    		return ResponseEntity.status(401).build(); // 토큰 없으면 Unauthorized
+    	}
+    	
+    	String userId = jwtTokenProvider.getUserIdFromToken(token);
+    	List<CommentDTO> myComments = commentService.getMyComments(userId);
+    	
+    	return ResponseEntity.ok(myComments);
     }
 }
