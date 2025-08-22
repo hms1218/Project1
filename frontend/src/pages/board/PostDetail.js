@@ -60,7 +60,6 @@ const PostDetail = () => {
 
                 const res = await getPostById(id);
                 console.log("res::", res)
-                console.log("???::", isFavorite)
                 setPost(res);
                 setLikes(res.likes);
 
