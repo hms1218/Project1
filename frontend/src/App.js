@@ -18,8 +18,8 @@ import PostEdit from "./pages/board/PostEdit";
 
 const App = () => {
     return (
-        <AuthProvider>
-            <Router>
+        <Router>
+            <AuthProvider>
                 <Header />
                 <main className="main-container">
                     <Routes>
@@ -34,12 +34,12 @@ const App = () => {
                         <Route path="/post/:id" element={<PostDetail />} />
                         <Route path="/write" element={<PostWrite />} />
                         <Route path="/post/:id/edit" element={<PostEdit />} />
-                        <Route path="/mypage" element={<MyPage />} />                      
+                        <Route path="/mypage" element={<MyPage />} />
                     </Routes>
                 </main>
                 <Footer />
-            </Router>
-        </AuthProvider>
+            </AuthProvider>
+        </Router>
     );
 }
 

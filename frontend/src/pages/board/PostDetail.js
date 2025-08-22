@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import "./Detail.css"
-import { getPostById, likesPost, deletePost, checkIfLiked, increaseViewCount } from "../../api/PostApi";
+import { getPostById, likesPost, deletePost, checkIfLiked, increaseViewCount, addFavorite, removeFavorite } from "../../api/PostApi";
 import { getCommentsByPostId, addComment, updateComment, deleteComment } from "../../api/CommentApi";
 import { FormatDate } from "../../utils/FormatDate";
 import { getFilesById } from "../../api/FileApi";
@@ -35,6 +35,8 @@ const PostDetail = () => {
 
     const [files, setFiles] = useState([]);
 
+    const [isFavorite, setIsFavorite] = useState(false);
+
     useEffect(() => {
         const getPost = async () => {
             try {
@@ -44,7 +46,7 @@ const PostDetail = () => {
                 } catch (e) {
                     viewedPosts = {};
                 }
-                console.log("viewedPosts: ", viewedPosts)
+                // console.log("viewedPosts: ", viewedPosts)
 
                 const idStr = String(id);
                 const VIEW_LIMIT = 1000 * 60 * 60;
@@ -57,10 +59,17 @@ const PostDetail = () => {
                 }
 
                 const res = await getPostById(id);
+                console.log("res::", res)
+                console.log("???::", isFavorite)
                 setPost(res);
                 setLikes(res.likes);
 
-                if (userId) {
+                // 스크랩 상태는 로컬 스토리지 혹은 서버 상태로 유지
+                const localFavorites = JSON.parse(localStorage.getItem("favorites")) || {};
+                const favoriteStatus = localFavorites[id] ?? res.favorite;
+                setIsFavorite(favoriteStatus);
+
+                if (userId && localStorage.getItem("token")) {
                     const liked = await checkIfLiked(id, userId);
                     setIsLiked(liked)
                 }
@@ -184,8 +193,29 @@ const PostDetail = () => {
         }
     }
 
-    console.log("등록시간:", post.createdAt);
-    console.log("수정시간:", post.updatedAt);
+    //스크랩 버튼 토글
+    const handleToggleFavorite = async () => {
+        if (!userId || !localStorage.getItem("token")) {
+            alert("로그인 후 이용하세요.");
+            return;
+        }
+        try {
+            console.log("dddd:::::::", isFavorite)
+            if (isFavorite) {
+                await removeFavorite(post.postId);
+                setIsFavorite(false);
+            } else {
+                await addFavorite(post.postId);
+                setIsFavorite(true);
+            }
+        } catch (err) {
+            console.error(err);
+            alert("스크랩 처리 실패");
+        }
+    };
+
+    // console.log("등록시간:", post.createdAt);
+    // console.log("수정시간:", post.updatedAt);
 
     return (
         <div className="detail-container">
@@ -207,6 +237,9 @@ const PostDetail = () => {
                         <button onClick={handleDelete}>삭제</button>
                     </>
                 )}
+                <button onClick={handleToggleFavorite}>
+                    {isFavorite ? "💖 스크랩 취소" : "🤍 스크랩"}
+                </button>
                 <button onClick={handleLikes} className={isLiked ? "liked-button" : ""}>👍추천</button>
                 <button onClick={() => navigate(`/board?page=${page}`)}>목록으로</button>
             </div>

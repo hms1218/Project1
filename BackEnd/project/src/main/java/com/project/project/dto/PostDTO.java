@@ -22,6 +22,7 @@ public class PostDTO {
     private String author;
     private int view;
     private int likes;
+    private boolean favorite;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     
@@ -43,6 +44,7 @@ public class PostDTO {
                 .author(post.getUser().getUserId())
                 .view(post.getView())
                 .likes(post.getLikes())
+                .favorite(post.isFavorite())
                 .createdAt(post.getCreatedAt())
                 .updatedAt(post.getUpdatedAt())
                 .build();

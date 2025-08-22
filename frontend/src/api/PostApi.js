@@ -10,9 +10,10 @@ export const getAllPosts = async () => {
 // 게시글 단건 조회
 export const getPostById = async (id) => {
     const response = await axios.get(`${API_BASE_URL}/posts/${id}`);
-    console.log("postRe::",response)
+    console.log("postRe::", response);
     return response.data;
 };
+
 
 //조회수 증가
 export const increaseViewCount = async (id) => {
@@ -86,3 +87,32 @@ export const getMyPosts = async () => {
 
     return res.data;
 }
+
+//스크랩 추가
+export const addFavorite = (postId) => {
+    const token = localStorage.getItem("token");
+    console.log("scrapToken:", token)
+    return axios.post(
+        `${API_BASE_URL}/favorite/${postId}`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+    );
+};
+
+//스크랩 해제
+export const removeFavorite = (postId) => {
+    const token = localStorage.getItem("token");
+    return axios.delete(
+        `${API_BASE_URL}/favorite/${postId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+    );
+};
+
+//스크랩 조회
+export const getFavorites = () => {
+    const token = localStorage.getItem("token");
+    return axios.get(
+        `${API_BASE_URL}/favorite`,
+        { headers: { Authorization: `Bearer ${token}` } }
+    );
+};

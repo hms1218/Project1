@@ -2,9 +2,6 @@ package com.project.project.entity;
 
 import java.time.LocalDateTime;
 
-import org.springframework.data.annotation.LastModifiedDate;
-
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -14,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,38 +22,26 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "posts")
-public class PostEntity {
+@Table(name = "posts_favorite",
+		uniqueConstraints = @UniqueConstraint(columnNames = {"post_id", "user_no"}))
+public class PostFavoriteEntity {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long postId;
+	private Long id;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_no", nullable = false)
-    private UserEntity user;
+	@JoinColumn(name = "post_id", nullable = false)
+	private PostEntity post;
 	
-	@Column(nullable = false, length = 200)
-	private String title;
-	
-	@Column(columnDefinition = "LONGTEXT", nullable = false)
-	private String content;
-	
-	private int view;
-	
-	private int likes;
-	
-	private boolean favorite;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_no", nullable = false)
+	private UserEntity user;
 	
 	private LocalDateTime createdAt;
 	
-	@LastModifiedDate
-	private LocalDateTime updatedAt;
-	
 	@PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.view = 0;
-        this.likes = 0;
-    }
+	public void prePersist() {
+		this.createdAt = LocalDateTime.now();
+	}
 }

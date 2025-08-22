@@ -5,6 +5,7 @@ import { FormatDateOnly } from "../utils/FormatDate";
 import { getMyPosts, getPostById } from "../api/PostApi";
 import { getMyComments } from "../api/CommentApi";
 import { Link } from "react-router-dom";
+import { getFavorites } from "../api/PostApi";
 
 const MyPage = () => {
 
@@ -21,6 +22,8 @@ const MyPage = () => {
     const [myComments, setMyComments] = useState([]);
     const [showFull, setShowFull] = useState(false);
     const [activeTab, setActiveTab] = useState('posts');
+
+    const [favorite, setFavorite] = useState([]);
 
     // API 사용자 정보 가져오기
     useEffect(() => {
@@ -49,9 +52,6 @@ const MyPage = () => {
         //작성한 댓글
         const fetchMyComments = async () => {
             try {
-                // const data = await getMyComments();
-                // console.log("MyComments:::", data);
-                // setMyComments(data);
                 const comments = await getMyComments();
                 console.log("comments", comments)
 
@@ -59,7 +59,6 @@ const MyPage = () => {
                 const withPosts = await Promise.all(
                     comments.map(async (comment) => {
                         try {
-                            console.log("여기까찌?", comment)
                             const post = await getPostById(comment.postId);
                             console.log("post::", post)
                             return { ...comment, postTitle: post.title };
@@ -75,9 +74,20 @@ const MyPage = () => {
             }
         }
 
+        //스크랩 조회
+        const fetchFavorite = async () => {
+            try {
+                const res = await getFavorites();
+                setFavorite(res.data);
+            } catch (error) {
+                console.error("즐겨찾기 불러오기 실패:", error);
+            }
+        }
+
         fetchUser();
         fetchMyPosts();
         fetchMyComments();
+        fetchFavorite();
     }, []);
 
     const handleUserInfoEdit = () => {
@@ -236,7 +246,17 @@ const MyPage = () => {
             {/* 즐겨찾기 */}
             <section className="favorites">
                 <h3>즐겨찾기</h3>
-                <p>개발 예정...</p>
+                {favorite.length === 0 ? (
+                    <p>즐겨찾기한 게시글이 없습니다.</p>
+                ) : (
+                    <ol>
+                        {favorite.map((fav) => (
+                            <li key={fav.postId}>
+                                <Link to={`/post/${fav.postId}`}>{fav.title}</Link>
+                            </li>
+                        ))}
+                    </ol>
+                )}
             </section>
         </div>
     );
