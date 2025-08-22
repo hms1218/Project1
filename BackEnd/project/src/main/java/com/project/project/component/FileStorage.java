@@ -16,7 +16,7 @@ import com.project.project.api.exception.UploadDirectoryCreationException;
 @Component
 public class FileStorage {
 
-	private static final String uploadDir = "C:\\Users\\admin\\Desktop\\uploads";
+	private static final String uploadDir = "uploads";
 	
 	public FileStorage() {
         Path uploadPath = Paths.get(uploadDir);
