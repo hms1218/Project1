@@ -1,9 +1,7 @@
 import "./FileUpload.css"
 import { deleteFile } from "../api/FileApi";
 import { useState } from "react";
-
-// const API_BASE_URL = "http://13.124.166.21:8081";
-const API_BASE_URL = "http://localhost:8081";
+import { API_BASE_URL } from "../api/BaseUrl";
 
 const FileUpload = ({files, setFiles}) => {
 
